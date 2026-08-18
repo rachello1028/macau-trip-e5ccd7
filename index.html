@@ -1,0 +1,1065 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<title>澳門行程夥伴</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#22579E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="澳門行程">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<style>*{margin:0}</style>
+</head>
+<body>
+<title>澳門行程夥伴</title>
+<style>
+:root{
+  --bg:#F5F1E8; --surface:#FFFFFF; --surface-2:#FBF8F1;
+  --ink:#1C2530; --muted:#5E6B78; --faint:#8A97A3;
+  --border:#E6DFD1; --border-strong:#D6CDBB;
+  --blue:#22579E; --blue-soft:#E6EEF8; --blue-ink:#1B4680;
+  --gold:#B67F1E; --gold-soft:#F6ECD6;
+  --green:#2E7D6B; --green-soft:#E1F0EB;
+  --coral:#C1573B; --coral-soft:#F7E6DF;
+  --danger:#B5443A;
+  --shadow:0 1px 2px rgba(28,37,48,.06),0 8px 24px rgba(28,37,48,.07);
+  --shadow-sm:0 1px 2px rgba(28,37,48,.08);
+  --r:16px; --r-sm:11px;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Songti TC","Noto Serif TC",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Segoe UI",Roboto,sans-serif;
+}
+:root:not([data-theme="light"]){}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#111621; --surface:#1A212D; --surface-2:#141b26;
+    --ink:#E9EDF3; --muted:#9AA7B5; --faint:#6E7C8B;
+    --border:#28323F; --border-strong:#36424F;
+    --blue:#5B92D6; --blue-soft:#1B2A3F; --blue-ink:#9FC1E8;
+    --gold:#DFAE55; --gold-soft:#2C2413;
+    --green:#57B49E; --green-soft:#16281F;
+    --coral:#DB8265; --coral-soft:#2E1C16;
+    --danger:#E0796D;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.4);
+    --shadow-sm:0 1px 2px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111621; --surface:#1A212D; --surface-2:#141b26;
+  --ink:#E9EDF3; --muted:#9AA7B5; --faint:#6E7C8B;
+  --border:#28323F; --border-strong:#36424F;
+  --blue:#5B92D6; --blue-soft:#1B2A3F; --blue-ink:#9FC1E8;
+  --gold:#DFAE55; --gold-soft:#2C2413;
+  --green:#57B49E; --green-soft:#16281F;
+  --coral:#DB8265; --coral-soft:#2E1C16;
+  --danger:#E0796D;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.4);
+  --shadow-sm:0 1px 2px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{
+  background:var(--bg); color:var(--ink); font-family:var(--sans);
+  font-size:16px; line-height:1.55; letter-spacing:.005em;
+  -webkit-font-smoothing:antialiased; padding-bottom:96px;
+  overscroll-behavior-y:none;
+}
+.wrap{max-width:560px;margin:0 auto;padding:0 16px}
+h1,h2,h3{margin:0;font-weight:700;text-wrap:balance;letter-spacing:-.01em}
+.num{font-family:var(--serif);font-variant-numeric:tabular-nums}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+a{color:var(--blue);text-decoration:none}
+
+/* ---------- Header ---------- */
+header{
+  position:sticky;top:0;z-index:40;background:var(--bg);
+  border-bottom:1px solid var(--border);
+}
+.head-top{display:flex;align-items:center;gap:12px;padding:14px 0 10px}
+.badge{
+  width:46px;height:46px;border-radius:13px;flex:none;
+  background:linear-gradient(150deg,var(--blue),var(--blue-ink));
+  color:#fff;display:grid;place-items:center;box-shadow:var(--shadow-sm);
+  position:relative;overflow:hidden;
+}
+.badge::after{content:"";position:absolute;inset:0;
+  background:
+   radial-gradient(circle at 30% 22%,rgba(255,255,255,.35),transparent 42%),
+   repeating-linear-gradient(45deg,rgba(255,255,255,.08) 0 4px,transparent 4px 8px);}
+.badge span{font-family:var(--serif);font-size:22px;font-weight:700;position:relative}
+.head-title{display:flex;flex-direction:column;line-height:1.2}
+.head-title b{font-size:19px;letter-spacing:-.02em}
+.head-title small{color:var(--muted);font-size:12.5px;letter-spacing:.02em}
+.theme-btn{margin-left:auto;width:38px;height:38px;border-radius:10px;
+  border:1px solid var(--border);background:var(--surface);display:grid;place-items:center;font-size:17px}
+
+/* live status bar */
+.status{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  padding:12px 14px;margin:2px 0 12px;box-shadow:var(--shadow-sm);
+  display:flex;align-items:center;gap:12px;
+}
+.status .dot{width:9px;height:9px;border-radius:50%;background:var(--green);flex:none;
+  box-shadow:0 0 0 4px var(--green-soft);animation:pulse 2.2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.5}}
+.status .s-body{min-width:0;flex:1}
+.status .s-label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);font-weight:700}
+.status .s-main{font-size:14.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.status .s-main span{color:var(--muted);font-weight:400}
+
+/* tabs */
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:0 0 12px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  flex:none;padding:8px 14px;border-radius:999px;font-size:14px;font-weight:600;
+  border:1px solid var(--border);background:var(--surface);color:var(--muted);
+  white-space:nowrap;transition:all .15s;
+}
+.tab .d{font-family:var(--serif);margin-right:5px;color:var(--faint);font-size:13px}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.tab[aria-selected="true"] .d{color:var(--bg);opacity:.6}
+
+/* ---------- Day header ---------- */
+.day-hero{margin:16px 0 6px}
+.day-hero .eyebrow{font-family:var(--serif);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);font-weight:700}
+.day-hero h2{font-size:23px;margin-top:3px}
+.day-hero p{margin:5px 0 0;color:var(--muted);font-size:13.5px}
+.day-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.chip{font-size:12px;font-weight:600;padding:5px 10px;border-radius:8px;background:var(--surface-2);border:1px solid var(--border);color:var(--muted);display:inline-flex;align-items:center;gap:5px}
+.chip.spend{background:var(--gold-soft);border-color:transparent;color:var(--gold)}
+
+/* ---------- Timeline ---------- */
+.timeline{position:relative;margin:14px 0 0;padding-left:0}
+.stop{
+  position:relative;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);margin-bottom:10px;box-shadow:var(--shadow-sm);overflow:hidden;
+}
+.stop.now{border-color:var(--blue);box-shadow:0 0 0 2px var(--blue-soft),var(--shadow)}
+.stop-main{display:flex;gap:12px;padding:13px 14px;align-items:flex-start}
+.stop-time{flex:none;width:52px;text-align:right;padding-top:1px}
+.stop-time b{font-family:var(--serif);font-size:15px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.stop-time .icon{font-size:15px;margin-top:3px;opacity:.85}
+.stop-body{flex:1;min-width:0}
+.stop-title{font-size:15.5px;font-weight:650;line-height:1.35}
+.stop-note{font-size:13px;color:var(--muted);margin-top:3px;line-height:1.5}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.t{font-size:11px;font-weight:700;padding:2.5px 7px;border-radius:6px;letter-spacing:.02em}
+.t.ka{background:var(--coral-soft);color:var(--coral)}
+.t.must{background:var(--blue);color:#fff}
+.t.book{background:var(--blue-soft);color:var(--blue-ink)}
+.t.eat{background:var(--gold-soft);color:var(--gold)}
+.t.free{background:var(--green-soft);color:var(--green)}
+.est{font-size:12px;color:var(--faint);margin-top:6px;font-variant-numeric:tabular-nums}
+.est b{color:var(--gold);font-weight:700;font-variant-numeric:tabular-nums}
+
+/* action row */
+.acts{display:flex;gap:7px;padding:0 14px 13px;flex-wrap:wrap}
+.act{
+  font-size:13px;font-weight:600;padding:8px 12px;border-radius:10px;
+  border:1px solid var(--border);background:var(--surface-2);color:var(--ink);
+  display:inline-flex;align-items:center;gap:6px;flex:1;justify-content:center;min-width:84px;
+}
+.act:active{transform:scale(.97)}
+.act.nav{background:var(--blue);color:#fff;border-color:var(--blue)}
+.act.money{background:var(--gold-soft);color:var(--gold);border-color:transparent}
+.act.money.has{background:var(--gold);color:#fff}
+.act.ticket{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.act.ticket.booked{background:var(--green);color:#fff;border-color:var(--green)}
+.act svg{width:15px;height:15px;flex:none}
+
+.add-free{width:100%;margin-top:2px;padding:12px;border-radius:var(--r);border:1.5px dashed var(--border-strong);background:transparent;color:var(--muted);font-weight:600;font-size:14px}
+.add-free:active{background:var(--surface-2)}
+.pm{display:inline-block;font-size:11px;font-weight:700;color:var(--blue-ink);background:var(--blue-soft);padding:1px 6px;border-radius:5px;margin-left:6px;vertical-align:middle}
+.logged{padding:0 14px 12px;margin-top:-3px}
+.logged-row{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;padding:6px 0;border-top:1px dashed var(--border)}
+.logged-row span{color:var(--muted)}
+.logged-row .amt{font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink)}
+.logged-row button{color:var(--danger);font-size:12px;font-weight:600;padding:2px 4px}
+
+/* ---------- Reference cards (guide tab) ---------- */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow-sm);margin-bottom:12px;overflow:hidden}
+.card-h{padding:14px 15px 10px;display:flex;align-items:center;gap:9px}
+.card-h .ic{font-size:19px}
+.card-h h3{font-size:16px}
+.card-h .sub{font-size:12px;color:var(--muted);font-weight:400;margin-top:1px}
+.card-b{padding:0 15px 14px}
+.check{display:flex;gap:11px;padding:9px 0;border-top:1px solid var(--border);align-items:flex-start;cursor:pointer}
+.check:first-child{border-top:none}
+.check input{appearance:none;width:21px;height:21px;border:2px solid var(--border-strong);border-radius:6px;flex:none;margin-top:1px;position:relative;transition:.15s}
+.check input:checked{background:var(--green);border-color:var(--green)}
+.check input:checked::after{content:"";position:absolute;left:6px;top:2px;width:5px;height:10px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(43deg)}
+.check .ct{font-size:14px;line-height:1.5}
+.check.done .ct{color:var(--faint);text-decoration:line-through}
+.check .ct small{display:block;color:var(--muted);font-size:12px;text-decoration:none;margin-top:1px}
+.check.done .ct small{color:var(--faint)}
+
+table.mini{width:100%;border-collapse:collapse;font-size:13.5px}
+table.mini td{padding:8px 0;border-top:1px solid var(--border);vertical-align:top}
+table.mini tr:first-child td{border-top:none}
+table.mini td:last-child{text-align:right;font-weight:600;white-space:nowrap;padding-left:10px;color:var(--gold);font-variant-numeric:tabular-nums}
+.kv{font-size:13.5px;line-height:1.6}
+.kv b{color:var(--blue-ink)}
+.callout{background:var(--coral-soft);border-radius:var(--r-sm);padding:11px 13px;font-size:13px;color:var(--coral);margin-top:10px;line-height:1.55}
+.callout b{color:var(--coral)}
+
+/* ---------- Reminders tab ---------- */
+.rem{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow-sm);margin-bottom:11px;padding:14px 15px}
+.rem.flight{border-left:4px solid var(--blue)}
+.rem.show{border-left:4px solid var(--coral)}
+.rem-top{display:flex;align-items:baseline;gap:8px}
+.rem-top h3{font-size:15.5px}
+.rem-top .when{margin-left:auto;font-family:var(--serif);font-size:15px;font-variant-numeric:tabular-nums;color:var(--blue-ink)}
+.rem-sub{font-size:12.5px;color:var(--muted);margin-top:3px}
+.leave{margin-top:11px;background:var(--surface-2);border-radius:var(--r-sm);padding:10px 12px;display:flex;align-items:center;gap:10px}
+.leave .lb{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);font-weight:700}
+.leave .lt{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--coral);font-variant-numeric:tabular-nums}
+.leave .cd{margin-left:auto;font-size:12px;font-weight:700;color:var(--muted);background:var(--surface);border:1px solid var(--border);padding:4px 9px;border-radius:8px;font-variant-numeric:tabular-nums}
+.rem-acts{display:flex;gap:7px;margin-top:11px}
+.rem-acts .act{flex:1}
+
+/* booking rows */
+.brow{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--border)}
+.brow:first-child{border-top:none}
+.bchk{width:24px;height:24px;flex:none;border-radius:50%;border:2px solid var(--border-strong);background:var(--surface-2);position:relative;transition:.15s}
+.bchk[aria-pressed="true"]{background:var(--green);border-color:var(--green)}
+.bchk[aria-pressed="true"]::after{content:"";position:absolute;left:7px;top:3px;width:5px;height:10px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(43deg)}
+.binfo{flex:1;min-width:0}
+.bname{font-weight:650;font-size:14.5px;line-height:1.3}
+.bsub{font-size:12.5px;color:var(--muted);margin-top:2px}
+.bright{text-align:right;flex:none}
+.bprice{font-weight:700;color:var(--gold);font-size:13.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.blink{font-size:12.5px;font-weight:700;color:var(--blue);margin-top:2px;padding:2px 0}
+.brow.done .bname{color:var(--muted)}
+.brow.done .bprice{color:var(--faint)}
+.t.done{background:var(--green-soft);color:var(--green)}
+.tog{display:flex;align-items:center;gap:10px;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:14px;width:100%;text-align:left}
+.tog .tk{width:24px;height:24px;flex:none;border-radius:50%;border:2px solid var(--border-strong);position:relative;transition:.15s}
+.tog[aria-pressed="true"]{background:var(--green-soft);border-color:var(--green)}
+.tog[aria-pressed="true"] .tk{background:var(--green);border-color:var(--green)}
+.tog[aria-pressed="true"] .tk::after{content:"";position:absolute;left:7px;top:3px;width:5px;height:10px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(43deg)}
+.tog .tl{font-weight:650;font-size:14.5px}
+.tog .tl small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+
+/* ---------- Bottom summary bar ---------- */
+.footbar{
+  position:fixed;left:0;right:0;bottom:0;z-index:45;
+  background:color-mix(in srgb,var(--surface) 88%,transparent);
+  backdrop-filter:saturate(180%) blur(14px);-webkit-backdrop-filter:saturate(180%) blur(14px);
+  border-top:1px solid var(--border);
+}
+.footbar .wrap{display:flex;align-items:center;gap:14px;padding:11px 16px;
+  padding-bottom:calc(11px + env(safe-area-inset-bottom))}
+.foot-col{line-height:1.15}
+.foot-col .fl{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);font-weight:700}
+.foot-col .fv{font-family:var(--serif);font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
+.foot-col .fv small{font-size:11px;color:var(--muted);font-family:var(--sans);font-weight:600;margin-left:2px}
+.foot-col .fsub{font-size:10px;color:var(--faint);font-weight:600;font-variant-numeric:tabular-nums;margin-top:1px}
+.foot-btn{margin-left:auto;background:var(--ink);color:var(--bg);font-weight:650;font-size:13.5px;padding:10px 15px;border-radius:11px;display:inline-flex;gap:6px;align-items:center}
+
+/* ---------- Modal ---------- */
+.scrim{position:fixed;inset:0;z-index:60;background:rgba(20,26,34,.5);backdrop-filter:blur(3px);
+  display:none;align-items:flex-end;justify-content:center}
+.scrim.open{display:flex}
+.sheet{background:var(--surface);width:100%;max-width:560px;border-radius:22px 22px 0 0;
+  padding:8px 18px calc(20px + env(safe-area-inset-bottom));box-shadow:0 -10px 40px rgba(0,0,0,.25);
+  animation:up .28s cubic-bezier(.2,.8,.2,1);max-height:88vh;overflow-y:auto}
+@keyframes up{from{transform:translateY(100%)}}
+.grip{width:38px;height:4px;border-radius:2px;background:var(--border-strong);margin:6px auto 14px}
+.sheet h3{font-size:18px;margin-bottom:3px}
+.sheet .sh-sub{font-size:13px;color:var(--muted);margin-bottom:16px}
+.field{margin-bottom:14px}
+.field label{font-size:12px;font-weight:700;letter-spacing:.03em;color:var(--muted);display:block;margin-bottom:6px;text-transform:uppercase}
+.cats{display:flex;gap:7px;flex-wrap:wrap}
+.cat{padding:8px 13px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);font-size:13.5px;font-weight:600;color:var(--muted)}
+.cat[aria-pressed="true"]{background:var(--blue);color:#fff;border-color:var(--blue)}
+.amt-in{display:flex;align-items:center;gap:10px;border:1px solid var(--border-strong);border-radius:12px;padding:12px 14px;background:var(--surface-2)}
+.amt-in select{border:none;background:none;font-size:15px;font-weight:700;color:var(--ink);font-family:inherit}
+.amt-in input{border:none;background:none;font-size:26px;font-weight:700;font-family:var(--serif);width:100%;color:var(--ink);outline:none}
+.amt-in input::placeholder{color:var(--faint)}
+.txt-in{width:100%;border:1px solid var(--border-strong);border-radius:11px;padding:11px 13px;font-size:14.5px;font-family:inherit;background:var(--surface-2);color:var(--ink);outline:none}
+.big-btn{width:100%;background:var(--blue);color:#fff;font-weight:700;font-size:16px;padding:14px;border-radius:13px;margin-top:6px}
+.big-btn.ghost{background:var(--surface-2);color:var(--ink);border:1px solid var(--border)}
+.hint{font-size:12px;color:var(--muted);margin-top:9px;line-height:1.5}
+.qr-preview{width:100%;border-radius:12px;margin-top:12px;border:1px solid var(--border);display:block}
+.tk-links{display:flex;gap:8px;margin:4px 0 6px}
+.tk-links a{flex:1;text-align:center;padding:11px;border-radius:11px;background:var(--surface-2);border:1px solid var(--border);font-weight:700;font-size:14px;color:var(--ink)}
+
+.empty{text-align:center;color:var(--faint);font-size:13.5px;padding:30px 20px}
+.sec-label{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin:22px 0 10px}
+.progress{height:6px;border-radius:3px;background:var(--border);overflow:hidden;margin-top:6px}
+.progress i{display:block;height:100%;background:var(--green);border-radius:3px;transition:width .3s}
+.toast{position:fixed;bottom:110px;left:50%;transform:translateX(-50%) translateY(20px);z-index:80;
+  background:var(--ink);color:var(--bg);font-size:14px;font-weight:600;padding:11px 18px;border-radius:12px;
+  opacity:0;transition:.3s;pointer-events:none;box-shadow:var(--shadow)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+button:focus-visible,input:focus-visible,.tab:focus-visible{outline:2.5px solid var(--blue);outline-offset:2px}
+</style>
+
+<header>
+  <div class="wrap">
+    <div class="head-top">
+      <div class="badge"><span>澳</span></div>
+      <div class="head-title">
+        <b>澳門行程夥伴</b>
+        <small>4 天 3 夜 · 08/27–08/30</small>
+      </div>
+      <button class="theme-btn" id="themeBtn" aria-label="切換深淺色">◐</button>
+    </div>
+    <div class="status" id="statusBar">
+      <div class="dot"></div>
+      <div class="s-body">
+        <div class="s-label" id="stLabel">現在</div>
+        <div class="s-main" id="stMain">載入行程中…</div>
+      </div>
+    </div>
+    <div class="tabs" id="tabs" role="tablist"></div>
+  </div>
+</header>
+
+<main class="wrap" id="view"></main>
+
+<div class="footbar">
+  <div class="wrap">
+    <div class="foot-col">
+      <div class="fl" id="footLabel">今日花費</div>
+      <div class="fv"><span id="footToday">0</span><small>MOP</small></div>
+      <div class="fsub" id="footTodayTwd">≈ NT$0</div>
+    </div>
+    <div class="foot-col">
+      <div class="fl">全程累計</div>
+      <div class="fv"><span id="footTotal">0</span><small>MOP</small></div>
+      <div class="fsub" id="footTotalTwd">≈ NT$0</div>
+    </div>
+    <button class="foot-btn" id="ledgerBtn">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16M4 12h16M4 19h10"/></svg>
+      帳本
+    </button>
+  </div>
+</div>
+
+<div class="scrim" id="scrim"><div class="sheet" id="sheet"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+const MOP2TWD = 4.1; // 約略換算，僅供參考
+const money = n => Math.round(n).toLocaleString('en-US');
+
+/* ===================== 行程資料 ===================== */
+const DAYS = [
+ { d:"Day 1", date:"08/27", dow:"四", theme:"抵達 ＋ 世遺老城",
+   note:"景點較多，太累可挑幾個跳過，晚餐前保留彈性。標「打卡」的拍照即走。",
+   items:[
+    {t:"03:30",ic:"🚗",title:"開車出發 → 桃園機場 第一航廈（T1）",note:"星宇航空在 T1，別開到 T2！建議停 T1 的 P1／P2 停車場，就在航廈出入口旁、走路約 2 分鐘到出境大廳。停 4 天約 NT$1,440（每日上限 NT$360）；想更省可停機場外民營停車場（約 NT$150／天、有免費接駁）。依住家車程抓時間。",type:"transport",map:"桃園國際機場第一航廈",parking:"桃園機場第一航廈停車場 P1 P2",est:1440,estcur:"TWD",estnote:"停車 4 天估"},
+    {t:"04:50",ic:"🛄",title:"第一航廈（T1）報到、辦理登機",note:"星宇航空（JX）在 T1 出境大廳報到、託運、安檢。今年暑假尖峰建議提前 3 小時抵達。",type:"transport",map:"桃園國際機場第一航廈 出境大廳"},
+    {t:"07:50",ic:"✈️",title:"星宇航空 JX 起飛 TPE → MFM",note:"第一航廈（T1）登機。飛行約 1 小時 55 分，09:45 抵達澳門。",type:"flight",ticket:{name:"電子機票 · 去程 JX（TPE→MFM）",plat:"雄獅訂單／星宇 App",flight:true}},
+    {t:"09:45",ic:"🛂",title:"抵達澳門機場，入境",note:"領行李、出關，保留「小白單」入境憑證，退房離境都要用，別丟。",type:"transport",map:"澳門國際機場"},
+    {t:"09:55",ic:"💳",title:"機場櫃檯買「澳門通」交通卡",note:"MOP80（含 MOP50 儲值＋MOP30 卡費）。搭公車感應只要 MOP3 起，比投現金 MOP6 划算。",type:"transport",est:80,estcur:"MOP"},
+    {t:"10:00",ic:"🚕",title:"機場 → 酒店",note:"直接搭計程車最快，約 15 分鐘。免費穿梭巴士多 10–11 點後才發車，早到直接搭車。",type:"transport",map:"澳門勵庭海景酒店 Harbourview Hotel Macau",est:85,estcur:"MOP",estnote:"的士 MOP70–100"},
+    {t:"10:05",ic:"💱",title:"機場找換店 先換小額港幣",note:"換約 HKD500–1000 應急（付車資、小額）。匯率較差但方便，主力款留到下午新馬路換。",type:"transport"},
+    {t:"10:30",ic:"🧳",title:"抵達酒店，寄放行李",note:"Check-in 要 15:00 後，先寄放行李輕裝出門。",type:"hotel",map:"澳門勵庭海景酒店"},
+    {t:"11:00",ic:"📸",title:"華倫天奴 澳門壹號廣場店",note:"酒店步行約 10 分鐘，南灣湖景精品商場，拍照即可離開。",type:"sight",tags:["ka"],map:"澳門壹號廣場 One Central Macau"},
+    {t:"12:00",ic:"🍽️",title:"午餐：漁人碼頭周邊簡餐",note:"酒店步行 5 分鐘內；也可選余榮記咖啡葡撻餐（南灣店）。",type:"eat",est:320,estcur:"TWD",map:"澳門漁人碼頭"},
+    {t:"13:30",ic:"🚌",title:"前往議事亭前地",note:"公車 3／10／11 號約 10–15 分（可用澳門通更便宜）；或計程車約 10 分（MOP35–45）。",type:"transport",map:"議事亭前地 Senado Square"},
+    {t:"14:00",ic:"⛪",title:"議事亭前地 → 市政署 → 大三巴牌坊 → 玫瑰堂",note:"景點彼此 5–10 分鐘步行圈內。市政署（Jojo 打卡）就在廣場旁，順路拍照。",type:"sight",tags:["ka","free"],map:"大三巴牌坊 Ruins of St. Paul's"},
+    {t:"15:00",ic:"📸",title:"十月初五馬路 → 南屏雅敘",note:"步行約 8 分鐘，內港老街風情。南屏雅敘是百年老茶室建築，拍照即可。",type:"sight",tags:["ka"],map:"南屏雅敘 澳門"},
+    {t:"15:20",ic:"🏛️",title:"典當業展示館（德成按）",note:"步行約 5 分鐘回新馬路一帶，澳門唯一當舖博物館，拍照即可。",type:"sight",tags:["ka"],map:"典當業展示館 德成按"},
+    {t:"15:35",ic:"💱",title:"新馬路找換店 換匯主力款",note:"興業／大眾兌換等民間找換店匯率比機場好，這裡把主要現金換好。",type:"transport",map:"新馬路 澳門"},
+    {t:"15:40",ic:"🍮",title:"打鐵豆花",note:"步行可達，豆花小憩。",type:"eat",est:40,estcur:"TWD",map:"打鐵豆花 澳門"},
+    {t:"16:00",ic:"🍢",title:"恆友魚蛋滷味 → 檸檬車露冰淇淋",note:"板樟堂街，部落客熱推排隊小吃＋人氣甜點。",type:"eat",tags:["ka"],est:180,estcur:"TWD",map:"恆友魚蛋 板樟堂街"},
+    {t:"16:40",ic:"📚",title:"葡文書局",note:"大三巴周邊，文青書店拍照打卡。",type:"sight",tags:["ka"],map:"葡文書局 Livraria Portuguesa 澳門"},
+    {t:"17:00",ic:"🛍️",title:"澳品薈＋紀念品批發＋鉅記／咀香園試吃",note:"都在大三巴周邊步行可達，一次逛完伴手禮（買髮夾、吊飾）。",type:"shop",map:"大三巴牌坊"},
+    {t:"17:40",ic:"🥛",title:"保健牛奶公司 點心小憩",note:"義順以外的在地燉奶選擇。",type:"eat",est:150,estcur:"TWD",map:"保健牛奶公司 澳門"},
+    {t:"19:00",ic:"🍜",title:"晚餐：黃枝記竹昇麵 或 陳光記燒臘",note:"福隆新街，從大三巴步行約 8–10 分；不需訂位，尖峰常需排隊。",type:"eat",est:420,estcur:"TWD",map:"福隆新街 澳門"},
+    {t:"21:00",ic:"🏨",title:"返回酒店",note:"計程車約 10 分（MOP35–45）；或公車 3／10／11 號回外港碼頭一帶。",type:"transport",map:"澳門勵庭海景酒店"},
+   ]},
+ { d:"Day 2", date:"08/28", dow:"五", theme:"路氹金光大道 ＋ 水舞間",
+   note:"晚餐提早吃、抓 1 小時內結束，留時間給登塔排隊。水舞間中途不可離場。",
+   items:[
+    {t:"08:30",ic:"🥛",title:"早餐：義順鮮奶公司 燉奶",note:"",type:"eat",est:150,estcur:"TWD",map:"義順鮮奶公司 澳門"},
+    {t:"10:00",ic:"🚤",title:"威尼斯人 The Venetian · 貢多拉遊船",note:"搭酒店／賭場免費穿梭巴士前往；建議 Klook 先訂約 9 折。",type:"ticket",tags:["book"],est:550,estcur:"TWD",map:"澳門威尼斯人 The Venetian Macao",ticket:{name:"貢多拉遊船",plat:"Klook"}},
+    {t:"11:30",ic:"📸",title:"VALENTINO（四季酒店）＋ 無印良品",note:"四季酒店與威尼斯人相通步行可達，精品拍照＋順路逛無印良品。",type:"sight",tags:["ka"],map:"澳門四季酒店 Four Seasons Macao"},
+    {t:"12:30",ic:"🍽️",title:"午餐：威尼斯人美食廣場",note:"",type:"eat",est:400,estcur:"TWD",map:"威尼斯人美食廣場"},
+    {t:"14:00",ic:"🎡",title:"銀河酒店 ＋ 8 字形摩天輪（新濠影滙）",note:"金光大道區內接駁車／步行皆可達，兩個都是拍照即走的地標。",type:"sight",tags:["ka"],map:"新濠影滙 8字摩天輪 Studio City"},
+    {t:"15:30",ic:"🏰",title:"倫敦人大笨鐘＋哈利波特展 或 自由逛街",note:"金光大道商場間有蓋走廊互通，逛街消磨到晚餐。",type:"sight",est:0,estcur:"TWD",estnote:"哈利波特展另計 約NT990",map:"澳門倫敦人 The Londoner Macao"},
+    {t:"16:45",ic:"🍽️",title:"晚餐：路氹城美食街簡餐",note:"提早吃，抓 1 小時內結束，留時間給登塔排隊。",type:"eat",est:400,estcur:"TWD",map:"路氹城 澳門"},
+    {t:"18:00",ic:"🗼",title:"巴黎人 · 登巴黎鐵塔觀景台（夜景場）",note:"買票、安檢、電梯排隊抓 45 分較保險，夜晚點燈拍照更漂亮。",type:"ticket",tags:["book"],est:430,estcur:"TWD",map:"澳門巴黎人 巴黎鐵塔 Parisian Macao",ticket:{name:"巴黎鐵塔觀景台",plat:"Klook"}},
+    {t:"18:45",ic:"🚶",title:"前往新濠天地",note:"步行約 10–15 分或搭免費接駁車。",type:"transport",map:"新濠天地 City of Dreams Macau"},
+    {t:"19:00",ic:"🎭",title:"新濠天地劇院入場",note:"Show 前 30 分鐘到，含安檢、找座位，中途不可離場。",type:"transport",map:"新濠天地水舞間劇院"},
+    {t:"19:30",ic:"💧",title:"水舞間 House of Dancing Water",note:"@新濠天地，全長 85 分鐘、中途不可離場。建議提早 1–2 週訂票選位。",type:"ticket",tags:["must","book"],est:4000,estcur:"TWD",estnote:"依座位 NT$2,688–6,088",map:"新濠天地水舞間劇院",ticket:{name:"水舞間門票",plat:"Klook"}},
+   ]},
+ { d:"Day 3", date:"08/29", dow:"六", theme:"人文美食 ＋ 日落夜景",
+   note:"旅遊塔 360 自助餐務必提前 1–2 週訂位。若想去路環，可用「旅遊塔晚餐」換成路環看海。",
+   items:[
+    {t:"08:30",ic:"🍜",title:"早餐：義順鮮奶 或 生利咖啡麵食（腸粉）",note:"訂單不含早餐，就近吃小吃店或茶餐廳。",type:"eat",est:180,estcur:"TWD",map:"生利咖啡麵食 澳門"},
+    {t:"09:30",ic:"🏰",title:"大炮台＋澳門博物館 → 主教山小堂 → 東望洋燈塔",note:"博物館現場購票即可。",type:"ticket",est:60,estcur:"TWD",map:"澳門博物館 Macao Museum",ticket:{name:"澳門博物館",plat:"現場"}},
+    {t:"11:30",ic:"📸",title:"雞記（東望洋店）",note:"東望洋燈塔下山順路，對面就是恩齊拍照的取景點。",type:"eat",tags:["ka"],map:"雞記 東望洋 澳門"},
+    {t:"12:30",ic:"🦀",title:"午餐：誠昌飯店 馳名水蟹粥",note:"氹仔官也街。建議 2 人分食一份大碗；喜歡葡國菜可改「扒皇燒」套餐。",type:"eat",est:1000,estcur:"TWD",estnote:"約 NT$1,000／2 人",map:"誠昌飯店 官也街 澳門"},
+    {t:"14:00",ic:"📸",title:"氹仔舊城區：施督憲正街 → 嘉模斜巷",note:"官也街周邊步行可達，葡式老街拍照。",type:"sight",tags:["ka"],map:"嘉模斜巷 氹仔 澳門"},
+    {t:"14:30",ic:"🎨",title:"龍環葡韻 ＋ 官也街手信老街",note:"鉅記、咀香園、英記餅家掃貨；晃記餅家杏仁餅為官也街限定老字號。",type:"shop",tags:["free"],map:"龍環葡韻 澳門"},
+    {t:"15:30",ic:"🚠",title:"大潭山斜行升降機 ＋ 瞭望台",note:"龍環葡韻步行 5 分鐘，免費電梯 1 分鐘直達山頂，360 度俯瞰路氹，日落前上去最美。",type:"sight",tags:["free"],map:"大潭山斜行升降機 澳門"},
+    {t:"16:00",ic:"☕",title:"旺記咖啡（歇腳）",note:"氹仔舊城區內，喝杯咖啡拍照休息。",type:"eat",tags:["ka"],est:100,estcur:"TWD",map:"旺記咖啡 氹仔 澳門"},
+    {t:"16:30",ic:"🌇",title:"澳門旅遊塔 觀光層看夕陽夜景",note:"Klook／KKday 訂票約 8–9 折。",type:"ticket",tags:["book"],est:830,estcur:"TWD",map:"澳門旅遊塔 Macau Tower",ticket:{name:"旅遊塔觀光層",plat:"Klook"}},
+    {t:"18:30",ic:"🍽️",title:"晚餐：旅遊塔 360 旋轉餐廳自助餐",note:"務必提前 1–2 週線上訂位。或改吃皇冠小館海蟹粥／七彩大排檔較經濟（約 NT$800）。",type:"ticket",tags:["must","book"],est:2400,estcur:"TWD",estnote:"經濟版約 NT$800",map:"澳門旅遊塔 360 旋轉餐廳",ticket:{name:"旅遊塔 360 餐廳",plat:"官網／電話"}},
+   ]},
+ { d:"Day 4", date:"08/30", dow:"日", theme:"掃貨賦歸",
+   note:"樂宮餅店腰果曲奇下午 3 點後常賣完，務必上午去。",
+   items:[
+    {t:"08:00",ic:"🥧",title:"早餐：瑪嘉烈蛋撻店 vs 安德魯餅店",note:"部落客常推薦兩家都吃──瑪嘉烈奶油味濃郁、安德魯外酥內軟。",type:"eat",est:96,estcur:"TWD",estnote:"約 NT$48／個",map:"瑪嘉烈蛋撻 澳門"},
+    {t:"09:00",ic:"🛍️",title:"官也街／新馬路手信店掃貨",note:"葡京酒店內「樂宮餅店」腰果曲奇是隱藏版熱門手信，下午 3 點後常賣完，務必上午去。",type:"shop",map:"新馬路 手信 澳門"},
+    {t:"10:00",ic:"🧳",title:"飯店退房，前往機場",note:"退房 11:00 前。機場約 15 分鐘車程。",type:"transport",map:"澳門國際機場"},
+    {t:"10:55",ic:"✈️",title:"星宇航空 JX 起飛 MFM → TPE",note:"12:45 抵達桃園。回台後到 T1 的 P1／P2 停車場開車。",type:"flight",map:"桃園機場第一航廈停車場 P1 P2",ticket:{name:"電子機票 · 回程 JX（MFM→TPE）",plat:"雄獅訂單／星宇 App",flight:true}},
+   ]},
+];
+
+/* ===================== 訂票／提醒 ===================== */
+const REMINDERS = [
+ {id:"r-go", kind:"flight", title:"去程航班 · 星宇 TPE→MFM", when:"08/27 07:50",
+  eventISO:"2026-08-27T07:50", buffer:180, travel:60,
+  sub:"暑假尖峰建議提前 3 小時到機場報到；再抓約 1 小時到機場車程。",
+  leaveNote:"最晚出發前往機場"},
+ {id:"r-water", kind:"show", title:"水舞間 · 新濠天地", when:"08/28 19:30",
+  eventISO:"2026-08-28T19:30", buffer:30, travel:20,
+  sub:"Show 前 30 分入場、含安檢找位，中途不可離場。務必先線上訂票選位。",
+  leaveNote:"最晚從路氹晚餐地點出發"},
+ {id:"r-360", kind:"show", title:"旅遊塔 360 自助餐訂位", when:"08/29 18:30",
+  eventISO:"2026-08-29T18:30", buffer:15, travel:15,
+  sub:"務必提前 1–2 週電話／官網訂位；建議看完夕陽直接入座。",
+  leaveNote:"最晚從觀光層出發"},
+ {id:"r-back", kind:"flight", title:"回程航班 · 星宇 MFM→TPE", when:"08/30 10:55",
+  eventISO:"2026-08-30T10:55", buffer:120, travel:20,
+  sub:"退房 11:00 前；機場約 15 分鐘車程，國際線建議提前 2 小時。",
+  leaveNote:"最晚從酒店退房出發"},
+];
+const BOOKINGS = [
+ {name:"水舞間門票",day:"Day2",plat:"Klook / KKday",price:"NT$2,688–6,088",must:true,key:"1-10",link:"https://www.klook.com/zh-TW/search/?query=%E6%B0%B4%E8%88%9E%E9%96%93"},
+ {name:"旅遊塔 360 餐廳",day:"Day3",plat:"官網／電話",price:"NT$2,400",must:true,key:"2-9",link:"https://www.macautower.com.mo/"},
+ {name:"貢多拉遊船",day:"Day2",plat:"Klook",price:"NT$550",must:false,key:"1-1",link:"https://www.klook.com/zh-TW/search/?query=%E8%B2%A2%E5%A4%9A%E6%8B%89"},
+ {name:"巴黎鐵塔觀景台",day:"Day2",plat:"Klook / KKday",price:"NT$430",must:false,key:"1-7",link:"https://www.klook.com/zh-TW/search/?query=%E5%B7%B4%E9%BB%8E%E9%90%B5%E5%A1%94"},
+ {name:"旅遊塔觀光層",day:"Day3",plat:"Klook / KKday",price:"NT$830",must:false,key:"2-8",link:"https://www.klook.com/zh-TW/search/?query=%E6%BE%B3%E9%96%80%E6%97%85%E9%81%8A%E5%A1%94"},
+ {name:"澳門博物館",day:"Day3",plat:"現場購票即可",price:"NT$60",must:false,key:"2-1",onsite:true,link:""},
+];
+const BOOKING_BY_KEY = Object.fromEntries(BOOKINGS.map(b=>[b.key,b]));
+
+/* ===================== 指南 · 清單 ===================== */
+const PRETRIP = [
+ {t:"護照效期 6 個月以上",s:"台灣人免簽、可停留 30 天，不需台胞證"},
+ {t:"投保旅遊平安險＋班機延誤險",s:"8 月為颱風季，強烈建議"},
+ {t:"租 eSIM／上網卡",s:"約 NT$150–300／3–5 天，出發前先買好"},
+ {t:"水舞間門票 先線上訂",s:"出發前 1–2 週，Klook／KKday 選位"},
+ {t:"旅遊塔 360 餐廳 先訂位",s:"出發前 1–2 週，官網／電話"},
+ {t:"貢多拉、巴黎鐵塔、旅遊塔觀光層 先訂",s:"Klook 約 8–9 折，省現場排隊"},
+ {t:"台銀先換少量 HKD 應急",s:"桃園機場先換，付車資用"},
+ {t:"確認 03:30 到機場的交通",s:"捷運客運未發車，先約好計程車／接送"},
+];
+const PACKING = [
+ {t:"護照 ＋ 登機證",s:"效期 6 個月以上"},
+ {t:"轉接頭（G 型三腳插座）",s:"澳門 220V，跟台灣不同，務必自備一個"},
+ {t:"行動電源",s:"只能手提不可託運，100Wh 以下免申報（約 27,000mAh 內），全程禁機上使用"},
+ {t:"現金 HKD／MOP ＋ 信用卡",s:"大額飯店商場可刷卡或支付寶"},
+ {t:"手機／筆電充電器",s:"多支援 100–240V 可直接用"},
+ {t:"防曬乳",s:"8 月高溫 28–34°C"},
+ {t:"雨具（傘／輕便雨衣）",s:"8 月雨季"},
+ {t:"好走的鞋",s:"老城區石板路多"},
+ {t:"泳衣",s:"飯店有恆溫泳池、按摩浴池"},
+ {t:"牙刷牙膏",s:"部分飯店不提供，需自備"},
+ {t:"個人藥品／常備藥",s:""},
+ {t:"小白單收好",s:"入境憑證，退房離境都要用，別丟"},
+];
+const TIPS = [
+ ["行李員搬運行李","MOP 10–20"],["房務床頭小費／天","MOP 5–10"],
+ ["一般餐廳／小吃店","通常已含服務費"],["高檔餐廳（如旅遊塔自助餐）","帳單 5–10%"],
+];
+
+/* ===================== 狀態 ===================== */
+const LS = {
+  exp:"macau_expenses_v1", chk:"macau_checks_v1",
+  tk:"macau_tickets_v1", theme:"macau_theme_v1", remOn:"macau_rem_v1",
+  prepaid:"macau_prepaid_v1"
+};
+const store = {
+  get(k,def){try{return JSON.parse(localStorage.getItem(k))??def}catch(e){return def}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+};
+let expenses = store.get(LS.exp, []);        // {id,dayIdx,itemIdx,place,cat,amt,cur,pay,note,ts}
+let checks   = store.get(LS.chk, {});         // {key:true}
+let tickets  = store.get(LS.tk, {});          // {itemKey:{url,img,booked,pnr}}
+let prepaid  = store.get(LS.prepaid, []);     // {id,name,amt,cur} 行前已付（機酒等）
+let activeTab = 0;
+function curLabel(c){ return c==='TWD'?'NT$':'MOP'; }
+function prepaidTWD(){ return prepaid.reduce((s,p)=>s+(p.cur==='TWD'?p.amt:p.amt*MOP2TWD),0); }
+
+/* ===================== 地圖 ===================== */
+function mapURL(q){
+  const tw = /桃園|TPE|台灣|停車場/.test(q);
+  const dest = tw ? q : q+" 澳門 Macau";
+  const mode = /停車場|機場|酒店|飯店/.test(q) ? "driving" : "walking";
+  return "https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(dest)+"&travelmode="+mode;
+}
+
+/* ===================== 花費計算 ===================== */
+function toMOP(amt,cur){ return cur==="MOP"?amt: amt/MOP2TWD; }
+function dayMOP(idx){ return expenses.filter(e=>e.dayIdx===idx).reduce((s,e)=>s+toMOP(e.amt,e.cur),0); }
+function totalMOP(){ return expenses.reduce((s,e)=>s+toMOP(e.amt,e.cur),0); }
+function itemExp(di,ii){ return expenses.filter(e=>e.dayIdx===di&&e.itemIdx===ii); }
+
+function refreshFoot(){
+  const dt=dayMOP(activeTab), tt=totalMOP();
+  document.getElementById('footToday').textContent = money(dt);
+  document.getElementById('footTotal').textContent = money(tt);
+  document.getElementById('footTodayTwd').textContent = "≈ NT$"+money(dt*MOP2TWD);
+  document.getElementById('footTotalTwd').textContent = "≈ NT$"+money(tt*MOP2TWD);
+  const lbl = document.getElementById('footLabel');
+  lbl.textContent = (DAYS[activeTab]?DAYS[activeTab].d:"旅途")+" 花費";
+}
+
+/* ===================== 時間工具 ===================== */
+function nowMock(){ return new Date(); }
+function parseItemDate(dayIdx,t){
+  const d = DAYS[dayIdx].date.split('/');
+  const [h,m]=t.split(':');
+  return new Date(2026, +d[0]-1, +d[1], +h, +m);
+}
+function fmtCountdown(ms){
+  if(ms<=0) return "已過";
+  const min=Math.floor(ms/60000), h=Math.floor(min/60), d=Math.floor(h/24);
+  if(d>0) return d+" 天 "+(h%24)+" 小時";
+  if(h>0) return h+" 小時 "+(min%60)+" 分";
+  return min+" 分鐘";
+}
+function leaveTime(r){
+  const ev=new Date(r.eventISO);
+  return new Date(ev.getTime()-(r.buffer+r.travel)*60000);
+}
+function fmtTime(dt){ return String(dt.getHours()).padStart(2,'0')+":"+String(dt.getMinutes()).padStart(2,'0'); }
+function fmtDate(dt){ return (dt.getMonth()+1)+"/"+dt.getDate(); }
+
+/* ===================== 即時狀態列 ===================== */
+function updateStatus(){
+  const now=nowMock();
+  // 找下一個提醒的「最晚出發」
+  let next=null;
+  for(const r of REMINDERS){ const lv=leaveTime(r); if(lv>now){ next={r,lv}; break; } }
+  const main=document.getElementById('stMain'), lab=document.getElementById('stLabel');
+  const tripStart=new Date("2026-08-27T03:30");
+  if(now<tripStart){
+    lab.textContent="出發倒數";
+    main.innerHTML="距離出發還有 <b>"+fmtCountdown(tripStart-now)+"</b>";
+  }else if(next){
+    lab.textContent="下一個關鍵時間";
+    main.innerHTML=next.r.title.split('·')[0]+" · 最晚 <b>"+fmtDate(next.lv)+" "+fmtTime(next.lv)+"</b> 出發（"+fmtCountdown(next.lv-now)+"）";
+  }else{
+    lab.textContent="行程";
+    main.innerHTML="祝旅途愉快 ✈️";
+  }
+}
+
+/* ===================== 分頁 ===================== */
+const TABS = [
+  ...DAYS.map((d,i)=>({label:d.d, sub:d.date, render:()=>renderDay(i), idx:i})),
+  {label:"訂票提醒", sub:"⏰", render:renderReminders},
+  {label:"行前 · 行李", sub:"🧳", render:renderGuide},
+];
+function renderTabs(){
+  const el=document.getElementById('tabs'); el.innerHTML="";
+  TABS.forEach((tb,i)=>{
+    const b=document.createElement('button');
+    b.className="tab"; b.setAttribute('role','tab');
+    b.setAttribute('aria-selected', i===activeTab);
+    b.innerHTML = tb.idx!=null ? '<span class="d">'+tb.sub+'</span>'+tb.label : tb.sub+' '+tb.label;
+    b.onclick=()=>{ activeTab=i; renderTabs(); TABS[i].render(); refreshFoot(); window.scrollTo({top:0,behavior:'smooth'}); };
+    el.appendChild(b);
+  });
+}
+
+/* ===================== 渲染：每日行程 ===================== */
+const TAGMAP={ka:{c:"ka",x:"打卡"},must:{c:"must",x:"必訂"},book:{c:"book",x:"可先訂"},eat:{c:"eat",x:"美食"},free:{c:"free",x:"免費"}};
+function renderDay(idx){
+  const day=DAYS[idx]; const v=document.getElementById('view');
+  const spentToday=dayMOP(idx);
+  let html='<section class="day-hero"><div class="eyebrow">'+day.d+' · '+day.date+'（'+day.dow+'）</div>'
+    +'<h2>'+day.theme+'</h2><p>'+day.note+'</p>'
+    +'<div class="day-meta"><span class="chip">📍 '+day.items.length+' 個點</span>'
+    +'<span class="chip spend">💰 已記 MOP '+money(spentToday)+'</span></div></section>';
+  html+='<div class="timeline">';
+  day.items.forEach((it,ii)=>{
+    const key=idx+'-'+ii;
+    const exps=itemExp(idx,ii);
+    const logged=exps.reduce((s,e)=>s+toMOP(e.amt,e.cur),0);
+    const tags=(it.tags||[]).map(t=>'<span class="t '+TAGMAP[t].c+'">'+TAGMAP[t].x+'</span>').join('');
+    const isTicket = it.type==='ticket';
+    let est="";
+    if(it.est!=null && it.est>0) est='<div class="est">預估 <b>'+(it.estcur==='MOP'?'MOP ':'NT$')+money(it.est)+'</b>'+(it.estnote?' · '+it.estnote:'')+'</div>';
+    else if(it.estnote) est='<div class="est">'+it.estnote+'</div>';
+
+    html+='<article class="stop" id="stop-'+key+'">';
+    html+='<div class="stop-main"><div class="stop-time"><b>'+it.t+'</b><div class="icon">'+it.ic+'</div></div>';
+    html+='<div class="stop-body"><div class="stop-title">'+it.title+'</div>';
+    if(it.note) html+='<div class="stop-note">'+it.note+'</div>';
+    if(tags) html+='<div class="tags">'+tags+'</div>';
+    html+=est+'</div></div>';
+
+    // actions
+    html+='<div class="acts">';
+    if(it.map) html+='<a class="act nav" href="'+mapURL(it.map)+'" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>導航</a>';
+    if(it.parking) html+='<a class="act" href="'+mapURL(it.parking)+'" target="_blank" rel="noopener"><b style="font-size:14px">🅿</b> 停車場</a>';
+    html+='<button class="act money'+(logged>0?' has':'')+'" data-money="'+key+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>'+(logged>0?'MOP '+money(logged):'記帳')+'</button>';
+    if(it.ticket){
+      const tkS = tickets[key]||{}; const hasTk = tkS.url||tkS.img; const isFlight=!!it.ticket.flight;
+      const done = isFlight ? (hasTk||tkS.pnr) : (!!tkS.booked);
+      const tkLabel = isFlight ? (hasTk?'開機票':(tkS.pnr?'機票 ✓':'電子機票')) : (hasTk?'開票':(tkS.booked?'已訂 ✓':'電子票'));
+      html+='<button class="act ticket'+(done?' booked':'')+'" data-ticket="'+key+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V7a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 000 6v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2a2 2 0 000-6z"/><path d="M14 5v14" stroke-dasharray="2 2"/></svg>'+tkLabel+'</button>';
+    }
+    html+='</div>';
+
+    if(exps.length) html+=loggedRows(exps);
+    html+='</article>';
+  });
+  html+='</div>';
+
+  // 額外景點／臨時消費
+  const freeExps = expenses.filter(e=>e.dayIdx===idx && (e.itemIdx===null||e.itemIdx===undefined));
+  html+='<button class="add-free" data-addfree="'+idx+'">＋ 加一筆（額外景點／臨時消費）</button>';
+  if(freeExps.length){
+    html+='<div class="card" style="margin-top:10px"><div class="card-h" style="padding-bottom:6px"><span class="ic">🧾</span><div><h3 style="font-size:15px">這天的額外花費</h3><div class="sub">不在原規劃點上的消費</div></div></div><div class="card-b" style="padding-top:2px">'+loggedRows(freeExps,true)+'</div></div>';
+  }
+
+  v.innerHTML=html;
+  bindDay();
+}
+function loggedRows(exps,plain){
+  let h= plain?'':'<div class="logged">';
+  exps.forEach(e=>{
+    const pm = e.pay?'<span class="pm">'+e.pay+'</span>':'';
+    const place = e.place?'<b>'+e.place+'</b> · ':'';
+    h+='<div class="logged-row"><span>'+place+e.cat+(e.note?' · '+e.note:'')+pm+'</span>'
+      +'<span class="amt">'+curLabel(e.cur)+' '+money(e.amt)+'</span>'
+      +'<button data-del="'+e.id+'">刪除</button></div>';
+  });
+  return h + (plain?'':'</div>');
+}
+function bindDay(){
+  document.querySelectorAll('[data-money]').forEach(b=>b.onclick=()=>openExpense(b.dataset.money));
+  document.querySelectorAll('[data-ticket]').forEach(b=>b.onclick=()=>openTicket(b.dataset.ticket));
+  document.querySelectorAll('[data-addfree]').forEach(b=>b.onclick=()=>openExpenseFree(+b.dataset.addfree));
+  document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{
+    expenses=expenses.filter(e=>e.id!==b.dataset.del); store.set(LS.exp,expenses);
+    TABS[activeTab].render(); refreshFoot(); toast("已刪除一筆花費");
+  });
+}
+
+/* ===================== 記帳 sheet ===================== */
+const CATS=["🍽️ 餐飲","📸 拍照費","🎫 門票","🚕 交通","🛍️ 購物","🏨 住宿","➕ 其他"];
+const PAYS=["💵 現金","💳 刷卡","📱 支付寶"];
+let pickCat=CATS[0], pickCur="MOP", pickPay=PAYS[0];
+function openExpense(key){
+  const [di,ii]=key.split('-').map(Number);
+  const it=DAYS[di].items[ii];
+  const preCat = it.type==='eat'?"🍽️ 餐飲": it.type==='ticket'?"🎫 門票": it.type==='shop'?"🛍️ 購物": it.type==='transport'?"🚕 交通":it.type==='flight'?"🚕 交通":"📸 拍照費";
+  expenseSheet({di,ii,title:it.t+' · '+it.title, preCat, preCur:it.estcur||"MOP", showPlace:false});
+}
+function openExpenseFree(di){
+  expenseSheet({di,ii:null,title:DAYS[di].d+' · '+DAYS[di].date+'　額外記一筆',preCat:"🛍️ 購物",preCur:"MOP",showPlace:true});
+}
+function expenseSheet(o){
+  pickCat=o.preCat; pickCur=o.preCur; pickPay=PAYS[0];
+  const sheet=document.getElementById('sheet');
+  sheet.innerHTML='<div class="grip"></div>'
+    +'<h3>記一筆花費</h3><div class="sh-sub">'+o.title+'</div>'
+    +(o.showPlace?'<div class="field"><label>地點／項目</label><input class="txt-in" id="placeIn" placeholder="例如：路環安德魯、臨時買的伴手禮"></div>':'')
+    +'<div class="field"><label>金額</label><div class="amt-in">'
+      +'<select id="curSel"><option value="MOP">MOP 澳門幣</option><option value="TWD">NT$ 台幣</option></select>'
+      +'<input id="amtIn" type="number" inputmode="decimal" placeholder="0"></div></div>'
+    +'<div class="field"><label>付款方式</label><div class="cats" id="payRow">'
+      +PAYS.map(p=>'<button class="cat" data-pay="'+p+'" aria-pressed="'+(p===pickPay)+'">'+p+'</button>').join('')+'</div></div>'
+    +'<div class="field"><label>分類</label><div class="cats" id="catRow">'
+      +CATS.map(c=>'<button class="cat" data-cat="'+c+'" aria-pressed="'+(c===pickCat)+'">'+c+'</button>').join('')+'</div></div>'
+    +'<div class="field"><label>備註（選填）</label><input class="txt-in" id="noteIn" placeholder="例如：拍照費、加點甜點"></div>'
+    +'<button class="big-btn" id="saveExp">儲存花費</button>';
+  openSheet();
+  document.getElementById('curSel').value=pickCur;
+  document.getElementById('curSel').onchange=e=>pickCur=e.target.value;
+  document.querySelectorAll('#payRow .cat').forEach(b=>b.onclick=()=>{
+    pickPay=b.dataset.pay;
+    document.querySelectorAll('#payRow .cat').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  });
+  document.querySelectorAll('#catRow .cat').forEach(b=>b.onclick=()=>{
+    pickCat=b.dataset.cat;
+    document.querySelectorAll('#catRow .cat').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  });
+  document.getElementById('saveExp').onclick=()=>{
+    const amt=parseFloat(document.getElementById('amtIn').value);
+    if(!amt||amt<=0){ toast("請輸入金額"); return; }
+    const place = o.showPlace ? (document.getElementById('placeIn').value.trim()||"額外") : null;
+    expenses.push({id:'e'+Date.now(),dayIdx:o.di,itemIdx:o.ii,place,cat:pickCat,amt,cur:pickCur,pay:pickPay,note:document.getElementById('noteIn').value.trim(),ts:Date.now()});
+    store.set(LS.exp,expenses); closeSheet(); TABS[activeTab].render(); refreshFoot(); toast("已記錄 "+curLabel(pickCur)+" "+money(amt));
+  };
+  setTimeout(()=>{const el=document.getElementById(o.showPlace?'placeIn':'amtIn'); if(el)el.focus();},300);
+}
+
+/* ===================== 電子票 sheet ===================== */
+function openTicket(key){
+  const [di,ii]=key.split('-').map(Number);
+  const it=DAYS[di].items[ii];
+  const saved=tickets[key]||{};
+  if(it.ticket && it.ticket.flight){ flightSheet(key,it,saved); return; }
+  const bk=BOOKING_BY_KEY[key];
+  const sheet=document.getElementById('sheet');
+  let html='<div class="grip"></div><h3>'+ (it.ticket?it.ticket.name:it.title) +'</h3>'
+    +'<div class="sh-sub">'+it.t+' · '+(bk?bk.day+' · '+bk.plat+' · '+bk.price : (it.ticket?('訂票管道：'+it.ticket.plat):''))+'</div>';
+  // 已訂購 toggle
+  html+='<button class="tog" id="tkBooked" aria-pressed="'+(!!saved.booked)+'"><span class="tk"></span>'
+    +'<span class="tl">'+(saved.booked?'已訂購 ✓':'標記為已訂購')+'<small>'+(saved.booked?'點一下可取消':'訂好後點這裡打勾，總表會同步')+'</small></span></button>';
+  // 前往訂購（該項專屬連結）
+  if(bk && bk.link) html+='<a class="big-btn" href="'+bk.link+'" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none">前往 '+bk.plat.split(' ')[0]+' 訂購 →</a>';
+  else if(bk && bk.onsite) html+='<div class="hint" style="margin-top:0">此項現場購票即可，不用先訂。</div>';
+  html+='<label style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;display:block;margin-top:16px">快速開啟訂票 App</label>';
+  html+='<div class="tk-links">'
+    +'<a href="https://www.klook.com/" target="_blank" rel="noopener">Klook</a>'
+    +'<a href="https://www.kkday.com/" target="_blank" rel="noopener">KKday</a>'
+    +'<a href="https://tw.trip.com/" target="_blank" rel="noopener">Trip.com</a></div>';
+  if(saved.img) html+='<img class="qr-preview" src="'+saved.img+'" alt="電子票 QR">';
+  if(saved.url) html+='<a class="big-btn" href="'+saved.url+'" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;margin-top:10px">開啟我的電子票 →</a>';
+  html+='<div class="field" style="margin-top:16px"><label>貼上電子票／憑證連結</label>'
+    +'<input class="txt-in" id="tkUrl" placeholder="https://…（貼上 Klook 憑證連結）" value="'+(saved.url||'')+'"></div>';
+  html+='<button class="big-btn ghost" id="tkPhoto">📷 存入 QR Code 截圖</button>'
+    +'<input type="file" id="tkFile" accept="image/*" style="display:none">';
+  html+='<button class="big-btn" id="tkSave">儲存到這個點</button>';
+  html+='<div class="hint">把票券連結或 QR 截圖存起來，到現場點「開票」一秒叫出，不用翻信箱找。資料只存在你自己手機。</div>';
+  sheet.innerHTML=html; openSheet();
+  document.getElementById('tkBooked').onclick=()=>{
+    tickets[key]=Object.assign(tickets[key]||{},{booked:!(tickets[key]&&tickets[key].booked)});
+    store.set(LS.tk,tickets); openTicket(key); TABS[activeTab].render(); refreshFoot();
+    toast(tickets[key].booked?'已標記為已訂購 ✓':'已取消標記');
+  };
+  document.getElementById('tkPhoto').onclick=()=>document.getElementById('tkFile').click();
+  document.getElementById('tkFile').onchange=e=>{
+    const f=e.target.files[0]; if(!f)return;
+    const rd=new FileReader(); rd.onload=()=>{ tickets[key]=Object.assign(tickets[key]||{},{img:rd.result}); store.set(LS.tk,tickets); openTicket(key); toast("已存入 QR 截圖"); };
+    rd.readAsDataURL(f);
+  };
+  document.getElementById('tkSave').onclick=()=>{
+    const url=document.getElementById('tkUrl').value.trim();
+    tickets[key]=Object.assign(tickets[key]||{},{url}); store.set(LS.tk,tickets);
+    closeSheet(); TABS[activeTab].render(); toast("電子票已儲存");
+  };
+}
+
+/* ===================== 電子機票 sheet ===================== */
+function flightSheet(key,it,saved){
+  const sheet=document.getElementById('sheet');
+  let html='<div class="grip"></div><h3>'+it.ticket.name+'</h3>'
+    +'<div class="sh-sub">'+it.t+' · '+it.title.replace('星宇航空 ','')+'　訂位管道：'+it.ticket.plat+'</div>';
+  html+='<div class="field"><label>訂位代號 PNR（6 碼）</label>'
+    +'<input class="txt-in" id="flPnr" placeholder="例如：ABC123（在雄獅訂單／星宇 App 查）" value="'+(saved.pnr||'')+'" style="text-transform:uppercase;letter-spacing:.1em;font-weight:700"></div>';
+  html+='<label style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em">線上報到 · 查詢</label>';
+  html+='<div class="tk-links">'
+    +'<a href="https://www.starlux-airlines.com/zh-TW/check-in-fly/check-in" target="_blank" rel="noopener">星宇報到</a>'
+    +'<a href="https://www.starlux-airlines.com/zh-TW" target="_blank" rel="noopener">星宇官網</a>'
+    +'<a href="https://www.liontravel.com/" target="_blank" rel="noopener">雄獅訂單</a></div>';
+  if(saved.img) html+='<img class="qr-preview" src="'+saved.img+'" alt="電子機票 / 登機證 QR">';
+  if(saved.url) html+='<a class="big-btn" href="'+saved.url+'" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;margin-top:10px">開啟我的電子機票 →</a>';
+  html+='<div class="field" style="margin-top:16px"><label>貼上電子機票／登機證連結</label>'
+    +'<input class="txt-in" id="flUrl" placeholder="https://…（登機證或訂單連結）" value="'+(saved.url||'')+'"></div>';
+  html+='<button class="big-btn ghost" id="flPhoto">📷 存入登機證／QR 截圖</button>'
+    +'<input type="file" id="flFile" accept="image/*" style="display:none">';
+  html+='<button class="big-btn" id="flSave">儲存機票資訊</button>';
+  html+='<div class="hint">建議把登機證存成 QR 截圖，過安檢、登機離線也能秀。資料只存在你手機。機＋酒總費用可到「帳本 → 行前已付款」記錄。</div>';
+  sheet.innerHTML=html; openSheet();
+  document.getElementById('flPhoto').onclick=()=>document.getElementById('flFile').click();
+  document.getElementById('flFile').onchange=e=>{
+    const f=e.target.files[0]; if(!f)return;
+    const rd=new FileReader(); rd.onload=()=>{ tickets[key]=Object.assign(tickets[key]||{},{img:rd.result}); store.set(LS.tk,tickets); openTicket(key); toast("已存入截圖"); };
+    rd.readAsDataURL(f);
+  };
+  document.getElementById('flSave').onclick=()=>{
+    tickets[key]=Object.assign(tickets[key]||{},{pnr:document.getElementById('flPnr').value.trim().toUpperCase(),url:document.getElementById('flUrl').value.trim()});
+    store.set(LS.tk,tickets); closeSheet(); TABS[activeTab].render(); toast("機票資訊已儲存");
+  };
+}
+
+/* ===================== 渲染：訂票提醒 ===================== */
+function renderReminders(){
+  const v=document.getElementById('view'); const now=nowMock();
+  const bookedN = BOOKINGS.filter(b=>tickets[b.key]&&tickets[b.key].booked).length;
+  let html='<section class="day-hero"><div class="eyebrow">⏰ 關鍵時間</div>'
+    +'<h2>訂票與班機提醒</h2><p>已把路程與報到緩衝算進去，倒數「最晚出發時間」。開著 App 時到點會跳提醒。</p>'
+    +'<div class="day-meta"><button class="chip" id="notifBtn" style="cursor:pointer">🔔 開啟到點通知</button>'
+    +'<span class="chip spend">🎟️ 訂票 '+bookedN+'/'+BOOKINGS.length+'</span></div></section>';
+  REMINDERS.forEach(r=>{
+    const ev=new Date(r.eventISO), lv=leaveTime(r);
+    html+='<div class="rem '+r.kind+'"><div class="rem-top"><h3>'+r.title+'</h3>'
+      +'<span class="when">'+r.when+'</span></div>'
+      +'<div class="rem-sub">'+r.sub+'</div>'
+      +'<div class="leave"><div><div class="lb">'+r.leaveNote+'</div>'
+      +'<div class="lt">'+fmtDate(lv)+' '+fmtTime(lv)+'</div></div>'
+      +'<div class="cd">'+(lv>now?'還有 '+fmtCountdown(lv-now):'已過')+'</div></div>';
+    // 加入 Google 日曆 link
+    const gcal="https://calendar.google.com/calendar/render?action=TEMPLATE&text="+encodeURIComponent(r.title)
+      +"&dates="+gcalDate(ev)+"/"+gcalDate(new Date(ev.getTime()+90*60000))
+      +"&details="+encodeURIComponent(r.sub+"\\n\\n最晚出發："+fmtDate(lv)+" "+fmtTime(lv));
+    html+='<div class="rem-acts"><a class="act nav" href="'+gcal+'" target="_blank" rel="noopener">＋ 加入 Google 日曆</a></div></div>';
+  });
+  // 訂票總表
+  html+='<div class="sec-label">需要購票／訂位總表 · 已完成 '+bookedN+'/'+BOOKINGS.length+'</div>';
+  html+='<div class="card"><div class="card-b" style="padding-top:6px">';
+  BOOKINGS.forEach(b=>{
+    const tk=tickets[b.key]||{}; const booked=!!tk.booked; const hasV=!!(tk.url||tk.img);
+    html+='<div class="brow'+(booked?' done':'')+'">'
+      +'<button class="bchk" data-book="'+b.key+'" aria-pressed="'+booked+'" aria-label="標記已訂購／取消"></button>'
+      +'<div class="binfo"><div class="bname">'+b.name
+        +(b.must?' <span class="t must">必訂</span>':'')
+        +(booked?' <span class="t done">已訂 ✓</span>':'')+'</div>'
+      +'<div class="bsub">'+b.day+' · '+b.plat+'</div></div>'
+      +'<div class="bright"><div class="bprice">'+b.price+'</div>'
+      +'<button class="blink" data-mng="'+b.key+'">'+(hasV?'開我的票 →':(booked?'管理票券':(b.onsite?'現場購票':'前往訂 →')))+'</button>'
+      +'</div></div>';
+  });
+  html+='<div class="callout" style="margin-top:6px">點左邊圓圈標記<b>已訂購</b>；點右邊可貼上你的電子票／QR。「必訂」熱門常客滿，務必<b>出發前 1–2 週</b>先訂。這裡標記會跟行程當天的景點電子票同步。</div>';
+  html+='</div></div>';
+  v.innerHTML=html;
+  document.getElementById('notifBtn').onclick=requestNotif;
+  document.querySelectorAll('[data-book]').forEach(el=>el.onclick=()=>{
+    const k=el.dataset.book; const tk=tickets[k]||{}; tk.booked=!tk.booked; tickets[k]=tk; store.set(LS.tk,tickets);
+    renderReminders(); toast(tk.booked?'已標記為已訂購 ✓':'已取消標記');
+  });
+  document.querySelectorAll('[data-mng]').forEach(el=>el.onclick=()=>openTicket(el.dataset.mng));
+}
+function gcalDate(dt){
+  // Google 日曆用 UTC；澳門/台北 UTC+8
+  const u=new Date(dt.getTime()-8*3600000);
+  const p=n=>String(n).padStart(2,'0');
+  return u.getUTCFullYear()+p(u.getUTCMonth()+1)+p(u.getUTCDate())+"T"+p(u.getUTCHours())+p(u.getUTCMinutes())+"00Z";
+}
+
+/* ===================== 渲染：行前 · 行李 ===================== */
+function renderGuide(){
+  const v=document.getElementById('view');
+  let html='<section class="day-hero"><div class="eyebrow">🧳 出發前</div>'
+    +'<h2>行前準備 ＆ 行李清單</h2><p>打勾記錄進度，資料存在手機裡，關掉再打開還在。</p></section>';
+
+  html+=checklistCard("✅","行前準備清單","出發前逐項確認","pre",PRETRIP);
+  html+=checklistCard("🎒","行李打包清單","勾完就安心出門","pack",PACKING);
+
+  // 小費
+  html+='<div class="card"><div class="card-h"><span class="ic">💵</span><div><h3>小費速查表</h3>'
+    +'<div class="sub">非強制，不給也不失禮；用小面額港幣／澳門幣方便</div></div></div>'
+    +'<div class="card-b"><table class="mini">'
+    +TIPS.map(r=>'<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>').join('')+'</table></div></div>';
+
+  // 換匯
+  html+='<div class="card"><div class="card-h"><span class="ic">💱</span><div><h3>去哪換匯</h3>'
+    +'<div class="sub">主用 MOP 澳門幣／HKD 港幣通用（約 1:1）</div></div></div>'
+    +'<div class="card-b kv">'
+    +'<div>✓ <b>推薦</b>：澳門「新馬路」一帶民間找換店，匯率較佳</div>'
+    +'<div>✓ 桃園機場先換少量 HKD 應急（付車資）</div>'
+    +'<div>✗ <b>避免</b>：澳門機場內找換店，匯率最差</div>'
+    +'<div>✗ 不建議用人民幣支付，會有匯損</div>'
+    +'<div class="callout">大額消費：飯店／商場／賭場可直接刷卡或支付寶。</div>'
+    +'</div></div>';
+
+  // 颱風備案
+  html+='<div class="card"><div class="card-h"><span class="ic">🌀</span><div><h3>下雨／颱風備案</h3>'
+    +'<div class="sub">8 月為澳門雨季＋颱風季（5–11 月）</div></div></div>'
+    +'<div class="card-b kv">'
+    +'<div><b>小雨：</b>把大三巴、官也街、龍環葡韻等戶外行程，對調成威尼斯人／倫敦人／巴黎人／新濠影滙，室內商場間有蓋走廊互通。</div>'
+    +'<div style="margin-top:8px"><b>8 號風球以上：</b>船班、航班可能取消，密切關注澳門氣象局（SMG）與航空公司通知，留在酒店周邊或室內設施。</div>'
+    +'<div class="callout">每天出發前查一次 SMG 澳門氣象局或 Windy App。平均氣溫 28–34°C、濕度高。</div>'
+    +'</div></div>';
+
+  // 住宿資訊
+  html+='<div class="card"><div class="card-h"><span class="ic">🏨</span><div><h3>住宿 · 澳門勵庭海景酒店</h3>'
+    +'<div class="sub">Harbourview Hotel Macau ★4 · 漁人碼頭旁</div></div></div>'
+    +'<div class="card-b kv">'
+    +'<div><b>入住</b> 08/27 15:00 起 · <b>退房</b> 08/30 11:00 前</div>'
+    +'<div>機場 → 酒店：的士約 MOP70–100，或機場巴士 AP1 約 MOP4.2</div>'
+    +'<div style="margin-top:6px"><b>飯店有</b>：沐浴用品、吹風機、Mini Bar、免費 WiFi、健身房、恆溫泳池、按摩浴池</div>'
+    +'<div><b>需自備</b>：轉接頭、牙刷牙膏、防曬、雨具、拖鞋／泳衣</div>'
+    +'<a class="act nav" style="margin-top:12px;display:inline-flex;max-width:180px" href="'+mapURL("澳門勵庭海景酒店 Harbourview Hotel Macau")+'" target="_blank" rel="noopener">導航到酒店</a>'
+    +'</div></div>';
+
+  v.innerHTML=html;
+  document.querySelectorAll('.check').forEach(c=>{
+    c.onclick=()=>{
+      const k=c.dataset.k; checks[k]=!checks[k]; store.set(LS.chk,checks);
+      c.classList.toggle('done',checks[k]); c.querySelector('input').checked=checks[k];
+      updateProgress();
+    };
+  });
+  updateProgress();
+}
+function checklistCard(ic,title,sub,pfx,list){
+  const done=list.filter((_,i)=>checks[pfx+i]).length;
+  let h='<div class="card"><div class="card-h"><span class="ic">'+ic+'</span><div style="flex:1"><h3>'+title+'</h3>'
+    +'<div class="sub">'+sub+'</div><div class="progress" data-prog="'+pfx+'"><i style="width:'+(done/list.length*100)+'%"></i></div></div>'
+    +'<div style="font-family:var(--serif);font-weight:700;color:var(--green);font-size:13px" data-count="'+pfx+'">'+done+'/'+list.length+'</div></div>'
+    +'<div class="card-b">';
+  list.forEach((it,i)=>{
+    const k=pfx+i, on=!!checks[k];
+    h+='<label class="check'+(on?' done':'')+'" data-k="'+k+'"><input type="checkbox" '+(on?'checked':'')+'>'
+      +'<div class="ct">'+it.t+(it.s?'<small>'+it.s+'</small>':'')+'</div></label>';
+  });
+  return h+'</div></div>';
+}
+function updateProgress(){
+  [["pre",PRE_LEN],["pack",PACK_LEN]].forEach(([pfx,len])=>{
+    const done=[...Array(len)].filter((_,i)=>checks[pfx+i]).length;
+    const bar=document.querySelector('[data-prog="'+pfx+'"] i'); if(bar)bar.style.width=(done/len*100)+"%";
+    const cnt=document.querySelector('[data-count="'+pfx+'"]'); if(cnt)cnt.textContent=done+"/"+len;
+  });
+}
+const PRE_LEN=PRETRIP.length, PACK_LEN=PACKING.length;
+
+/* ===================== 帳本 sheet ===================== */
+function openLedger(){
+  const sheet=document.getElementById('sheet');
+  const tripMOP=totalMOP(), tripTWD=tripMOP*MOP2TWD, preTWD=prepaidTWD(), grandTWD=preTWD+tripTWD;
+  const byCat={}, byPay={};
+  expenses.forEach(e=>{ byCat[e.cat]=(byCat[e.cat]||0)+toMOP(e.amt,e.cur); byPay[e.pay||"💵 現金"]=(byPay[e.pay||"💵 現金"]||0)+toMOP(e.amt,e.cur); });
+  const cats=Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
+
+  let html='<div class="grip"></div><h3>花費帳本</h3>'
+    +'<div class="sh-sub">機酒等行前已付 ＋ 旅途花費，台幣統計（1 MOP≈NT$'+MOP2TWD+'）</div>';
+  // 合計
+  html+='<div style="background:var(--ink);color:var(--bg);border-radius:16px;padding:15px 16px;margin-bottom:11px">'
+    +'<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;opacity:.65">全部合計（含機酒）</div>'
+    +'<div style="font-family:var(--serif);font-size:29px;font-weight:700">NT$'+money(grandTWD)+'</div></div>';
+  html+='<div style="display:flex;gap:10px;margin-bottom:18px">'
+    +'<div style="flex:1;background:var(--blue-soft);border-radius:13px;padding:12px 13px"><div style="font-size:10.5px;font-weight:700;color:var(--blue-ink);text-transform:uppercase;letter-spacing:.04em">行前已付</div><div style="font-family:var(--serif);font-size:20px;font-weight:700;color:var(--blue-ink)">NT$'+money(preTWD)+'</div></div>'
+    +'<div style="flex:1;background:var(--gold-soft);border-radius:13px;padding:12px 13px"><div style="font-size:10.5px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.04em">旅途花費</div><div style="font-family:var(--serif);font-size:20px;font-weight:700;color:var(--gold)">MOP '+money(tripMOP)+'</div><div style="font-size:11px;color:var(--muted);font-weight:600">≈ NT$'+money(tripTWD)+'</div></div></div>';
+
+  // 行前已付款
+  html+='<div class="sec-label" style="margin-top:0">行前已付款（機票＋酒店等）</div>';
+  html+='<div class="card"><div class="card-b" style="padding:6px 15px 14px">';
+  if(prepaid.length){
+    prepaid.forEach(p=>{
+      html+='<div class="logged-row" style="padding:9px 0"><span style="font-weight:600">'+p.name+'</span>'
+        +'<span class="amt">'+curLabel(p.cur)+' '+money(p.amt)+'</span>'
+        +'<button data-delpre="'+p.id+'">刪除</button></div>';
+    });
+  } else html+='<div style="font-size:13px;color:var(--muted);padding:8px 0">還沒記錄。把雄獅的機＋酒訂單金額加進來，總花費才完整。</div>';
+  html+='<button class="add-free" id="addPre" style="margin-top:8px">＋ 新增行前已付款</button></div></div>';
+
+  // 付款方式
+  if(Object.keys(byPay).length){
+    html+='<div class="sec-label">旅途付款方式（幫你抓要帶多少現金）</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px">';
+    ["💵 現金","💳 刷卡","📱 支付寶"].forEach(p=>{ const v=byPay[p]||0; if(v>0) html+='<div style="flex:1;min-width:90px;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:10px 12px"><div style="font-size:12px;color:var(--muted);font-weight:600">'+p+'</div><div style="font-weight:700;font-variant-numeric:tabular-nums">MOP '+money(v)+'</div></div>'; });
+    html+='</div>';
+  }
+
+  // 分類統計
+  if(cats.length){
+    html+='<div class="sec-label">分類統計</div>';
+    cats.forEach(([c,v])=>{
+      const pct=tripMOP>0?v/tripMOP*100:0;
+      html+='<div style="margin-bottom:11px"><div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:4px"><span>'+c+'</span><span style="font-weight:700;font-variant-numeric:tabular-nums">MOP '+money(v)+'</span></div>'
+        +'<div class="progress"><i style="width:'+pct+'%;background:var(--gold)"></i></div></div>';
+    });
+    html+='<div class="sec-label">每日</div>';
+    DAYS.forEach((d,i)=>{ const dv=dayMOP(i); if(dv>0) html+='<div style="display:flex;justify-content:space-between;font-size:14px;padding:7px 0;border-top:1px solid var(--border)"><span>'+d.d+' · '+d.date+'</span><span style="font-weight:700;font-variant-numeric:tabular-nums">MOP '+money(dv)+'</span></div>'; });
+    html+='<button class="big-btn ghost" id="expCsv" style="margin-top:18px">📤 匯出花費紀錄（CSV）</button>';
+  } else html+='<div class="empty">旅途還沒有花費紀錄。<br>在行程每個點按「記帳」，或用每天下面的「＋ 加一筆」。</div>';
+
+  sheet.innerHTML=html; openSheet();
+  const csv=document.getElementById('expCsv'); if(csv)csv.onclick=exportCSV;
+  document.getElementById('addPre').onclick=openPrepaid;
+  document.querySelectorAll('[data-delpre]').forEach(b=>b.onclick=()=>{
+    prepaid=prepaid.filter(p=>p.id!==b.dataset.delpre); store.set(LS.prepaid,prepaid);
+    openLedger(); refreshFoot(); toast("已刪除");
+  });
+}
+function openPrepaid(){
+  const sheet=document.getElementById('sheet');
+  let curP="TWD";
+  sheet.innerHTML='<div class="grip"></div><h3>新增行前已付款</h3><div class="sh-sub">出發前就付掉的費用，例如機票、酒店、保險、eSIM</div>'
+    +'<div class="field"><label>項目名稱</label><input class="txt-in" id="preName" placeholder="例如：機票＋酒店（雄獅）"></div>'
+    +'<div class="cats" style="margin-bottom:14px"><button class="cat" id="qMachie" aria-pressed="false">✈️🏨 機票＋酒店</button><button class="cat" id="qIns" aria-pressed="false">🛡️ 保險</button><button class="cat" id="qSim" aria-pressed="false">📶 eSIM</button></div>'
+    +'<div class="field"><label>金額</label><div class="amt-in">'
+      +'<select id="preCur"><option value="TWD">NT$ 台幣</option><option value="MOP">MOP 澳門幣</option></select>'
+      +'<input id="preAmt" type="number" inputmode="decimal" placeholder="0"></div></div>'
+    +'<button class="big-btn" id="preSave">儲存</button>';
+  openSheet();
+  const nameEl=document.getElementById('preName');
+  document.getElementById('qMachie').onclick=()=>nameEl.value="機票＋酒店（雄獅）";
+  document.getElementById('qIns').onclick=()=>nameEl.value="旅遊平安險＋班機延誤險";
+  document.getElementById('qSim').onclick=()=>nameEl.value="eSIM／上網卡";
+  document.getElementById('preCur').onchange=e=>curP=e.target.value;
+  document.getElementById('preSave').onclick=()=>{
+    const amt=parseFloat(document.getElementById('preAmt').value);
+    if(!amt||amt<=0){ toast("請輸入金額"); return; }
+    prepaid.push({id:'p'+Date.now(),name:nameEl.value.trim()||"行前已付",amt,cur:curP});
+    store.set(LS.prepaid,prepaid); openLedger(); refreshFoot(); toast("已加入 "+curLabel(curP)+" "+money(amt));
+  };
+  setTimeout(()=>nameEl.focus(),300);
+}
+function exportCSV(){
+  let rows=[["日","時間","地點","分類","付款","幣別","金額","備註"]];
+  prepaid.forEach(p=>rows.push(["行前","","（已付）"+p.name,"機酒/行前","",p.cur,p.amt,""]));
+  expenses.slice().sort((a,b)=>a.dayIdx-b.dayIdx||((a.itemIdx??99)-(b.itemIdx??99))).forEach(e=>{
+    const it=(e.itemIdx!=null)?DAYS[e.dayIdx].items[e.itemIdx]:null;
+    const t=it?it.t:""; const name=it?it.title:(e.place||"額外");
+    rows.push([DAYS[e.dayIdx].date,t,name,e.cat,e.pay||"",e.cur,e.amt,e.note||""]);
+  });
+  const csv="﻿"+rows.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(",")).join("\n");
+  const blob=new Blob([csv],{type:"text/csv"});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download="澳門花費.csv"; a.click();
+  toast("已匯出 CSV");
+}
+
+/* ===================== 通知 ===================== */
+function requestNotif(){
+  if(!("Notification" in window)){ toast("此瀏覽器不支援通知"); return; }
+  Notification.requestPermission().then(p=>{
+    if(p==="granted"){ store.set(LS.remOn,true); toast("已開啟 · App 開著時到點會提醒"); scheduleNotifs(); }
+    else toast("未授權通知");
+  });
+}
+let notifTimers=[];
+function scheduleNotifs(){
+  notifTimers.forEach(clearTimeout); notifTimers=[];
+  if(!store.get(LS.remOn,false) || Notification.permission!=="granted") return;
+  const now=Date.now();
+  REMINDERS.forEach(r=>{
+    const lv=leaveTime(r).getTime();
+    [{at:lv-30*60000,msg:"30 分鐘後該出發"},{at:lv,msg:"該出發了！"}].forEach(x=>{
+      const delay=x.at-now;
+      if(delay>0 && delay<24*3600000*6){
+        notifTimers.push(setTimeout(()=>{ try{new Notification("⏰ "+r.title,{body:x.msg+" · 最晚 "+fmtTime(leaveTime(r))+" 出發"});}catch(e){} }, delay));
+      }
+    });
+  });
+}
+
+/* ===================== Sheet / Toast 基礎 ===================== */
+function openSheet(){ document.getElementById('scrim').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeSheet(){ document.getElementById('scrim').classList.remove('open'); document.body.style.overflow=''; }
+document.getElementById('scrim').onclick=e=>{ if(e.target.id==='scrim') closeSheet(); };
+let toastT;
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),1900); }
+
+/* ===================== 主題 ===================== */
+function applyTheme(t){ if(t) document.documentElement.setAttribute('data-theme',t); else document.documentElement.removeAttribute('data-theme'); }
+(function initTheme(){ const t=store.get(LS.theme,null); applyTheme(t); })();
+document.getElementById('themeBtn').onclick=()=>{
+  const cur=document.documentElement.getAttribute('data-theme');
+  const isDark = cur==='dark' || (!cur && matchMedia('(prefers-color-scheme:dark)').matches);
+  const next=isDark?'light':'dark'; applyTheme(next); store.set(LS.theme,next);
+};
+
+/* ===================== 啟動 ===================== */
+document.getElementById('ledgerBtn').onclick=openLedger;
+renderTabs(); renderDay(0); refreshFoot(); updateStatus();
+setInterval(updateStatus,30000);
+if(store.get(LS.remOn,false)) scheduleNotifs();
+</script>
+
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); });
+}
+</script>
+</body>
+</html>
