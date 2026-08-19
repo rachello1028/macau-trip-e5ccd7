@@ -632,12 +632,13 @@ function renderDay(idx){
   v.innerHTML=html;
   bindDay();
 }
+function esc(s){ return String(s==null?'':s).replace(/"/g,'&quot;'); }
 function loggedRows(exps,plain){
   let h= plain?'':'<div class="logged">';
   exps.forEach(e=>{
     const pm = e.pay?'<span class="pm">'+e.pay+'</span>':'';
     const place = e.place?'<b>'+e.place+'</b> · ':'';
-    h+='<div class="logged-row"><span>'+place+e.cat+(e.note?' · '+e.note:'')+pm+'</span>'
+    h+='<div class="logged-row"><span data-edit="'+e.id+'" style="cursor:pointer;min-width:0">'+place+e.cat+(e.note?' · '+e.note:'')+pm+' <span style="color:var(--blue);font-weight:700;white-space:nowrap">✎ 改</span></span>'
       +'<span class="amt">'+curLabel(e.cur)+' '+money(e.amt)+'</span>'
       +'<button data-del="'+e.id+'">刪除</button></div>';
   });
@@ -647,6 +648,7 @@ function bindDay(){
   document.querySelectorAll('[data-money]').forEach(b=>b.onclick=()=>openExpense(b.dataset.money));
   document.querySelectorAll('[data-ticket]').forEach(b=>b.onclick=()=>openTicket(b.dataset.ticket));
   document.querySelectorAll('[data-addfree]').forEach(b=>b.onclick=()=>openExpenseFree(+b.dataset.addfree));
+  document.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>openEditExpense(b.dataset.edit));
   document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{
     expenses=expenses.filter(e=>e.id!==b.dataset.del); store.set(LS.exp,expenses);
     TABS[activeTab].render(); refreshFoot(); toast("已刪除一筆花費");
@@ -666,21 +668,30 @@ function openExpense(key){
 function openExpenseFree(di){
   expenseSheet({di,ii:null,title:DAYS[di].d+' · '+DAYS[di].date+'　額外記一筆',preCat:"🛍️ 購物",preCur:"MOP",showPlace:true});
 }
+function openEditExpense(id){
+  const e=expenses.find(x=>x.id===id); if(!e)return;
+  const isFree=(e.itemIdx==null);
+  const it=isFree?null:DAYS[e.dayIdx].items[e.itemIdx];
+  const title=isFree?(DAYS[e.dayIdx].d+' · '+DAYS[e.dayIdx].date+'　額外花費'):(it.t+' · '+it.title);
+  expenseSheet({di:e.dayIdx,ii:e.itemIdx,title,preCat:e.cat,preCur:e.cur,showPlace:isFree,edit:e});
+}
 function expenseSheet(o){
-  pickCat=o.preCat; pickCur=o.preCur; pickPay=PAYS[0];
+  const ed=o.edit||null;
+  pickCat=ed?ed.cat:o.preCat; pickCur=ed?ed.cur:o.preCur; pickPay=ed?(ed.pay||PAYS[0]):PAYS[0];
   const sheet=document.getElementById('sheet');
   sheet.innerHTML='<div class="grip"></div>'
-    +'<h3>記一筆花費</h3><div class="sh-sub">'+o.title+'</div>'
-    +(o.showPlace?'<div class="field"><label>地點／項目</label><input class="txt-in" id="placeIn" placeholder="例如：路環安德魯、臨時買的伴手禮"></div>':'')
+    +'<h3>'+(ed?'修改花費':'記一筆花費')+'</h3><div class="sh-sub">'+o.title+'</div>'
+    +(o.showPlace?'<div class="field"><label>地點／項目</label><input class="txt-in" id="placeIn" placeholder="例如：路環安德魯、臨時買的伴手禮" value="'+esc(ed?ed.place:'')+'"></div>':'')
     +'<div class="field"><label>金額</label><div class="amt-in">'
       +'<select id="curSel"><option value="MOP">MOP 澳門幣</option><option value="TWD">NT$ 台幣</option></select>'
-      +'<input id="amtIn" type="number" inputmode="decimal" placeholder="0"></div></div>'
+      +'<input id="amtIn" type="number" inputmode="decimal" placeholder="0" value="'+(ed?ed.amt:'')+'"></div></div>'
     +'<div class="field"><label>付款方式</label><div class="cats" id="payRow">'
       +PAYS.map(p=>'<button class="cat" data-pay="'+p+'" aria-pressed="'+(p===pickPay)+'">'+p+'</button>').join('')+'</div></div>'
     +'<div class="field"><label>分類</label><div class="cats" id="catRow">'
       +CATS.map(c=>'<button class="cat" data-cat="'+c+'" aria-pressed="'+(c===pickCat)+'">'+c+'</button>').join('')+'</div></div>'
-    +'<div class="field"><label>備註（選填）</label><input class="txt-in" id="noteIn" placeholder="例如：拍照費、加點甜點"></div>'
-    +'<button class="big-btn" id="saveExp">儲存花費</button>';
+    +'<div class="field"><label>備註（選填）</label><input class="txt-in" id="noteIn" placeholder="例如：拍照費、加點甜點" value="'+esc(ed?ed.note:'')+'"></div>'
+    +'<button class="big-btn" id="saveExp">'+(ed?'儲存修改':'儲存花費')+'</button>'
+    +(ed?'<button class="big-btn ghost" id="delExp" style="color:var(--danger);margin-top:8px">🗑 刪除這筆</button>':'');
   openSheet();
   document.getElementById('curSel').value=pickCur;
   document.getElementById('curSel').onchange=e=>pickCur=e.target.value;
@@ -695,11 +706,22 @@ function expenseSheet(o){
   document.getElementById('saveExp').onclick=()=>{
     const amt=parseFloat(document.getElementById('amtIn').value);
     if(!amt||amt<=0){ toast("請輸入金額"); return; }
-    const place = o.showPlace ? (document.getElementById('placeIn').value.trim()||"額外") : null;
-    expenses.push({id:'e'+Date.now(),dayIdx:o.di,itemIdx:o.ii,place,cat:pickCat,amt,cur:pickCur,pay:pickPay,note:document.getElementById('noteIn').value.trim(),ts:Date.now()});
-    store.set(LS.exp,expenses); closeSheet(); TABS[activeTab].render(); refreshFoot(); toast("已記錄 "+curLabel(pickCur)+" "+money(amt));
+    const note=document.getElementById('noteIn').value.trim();
+    if(ed){
+      const place = o.showPlace ? (document.getElementById('placeIn').value.trim()||"額外") : ed.place;
+      Object.assign(ed,{cat:pickCat,amt,cur:pickCur,pay:pickPay,note,place});
+      store.set(LS.exp,expenses); closeSheet(); TABS[activeTab].render(); refreshFoot(); toast("已更新這筆花費");
+    }else{
+      const place = o.showPlace ? (document.getElementById('placeIn').value.trim()||"額外") : null;
+      expenses.push({id:'e'+Date.now(),dayIdx:o.di,itemIdx:o.ii,place,cat:pickCat,amt,cur:pickCur,pay:pickPay,note,ts:Date.now()});
+      store.set(LS.exp,expenses); closeSheet(); TABS[activeTab].render(); refreshFoot(); toast("已記錄 "+curLabel(pickCur)+" "+money(amt));
+    }
   };
-  setTimeout(()=>{const el=document.getElementById(o.showPlace?'placeIn':'amtIn'); if(el)el.focus();},300);
+  if(ed){ document.getElementById('delExp').onclick=()=>{
+    expenses=expenses.filter(x=>x.id!==ed.id); store.set(LS.exp,expenses);
+    closeSheet(); TABS[activeTab].render(); refreshFoot(); toast("已刪除一筆花費");
+  }; }
+  setTimeout(()=>{const el=document.getElementById(o.showPlace&&!ed?'placeIn':'amtIn'); if(el)el.focus();},300);
 }
 
 /* ===================== 電子票 sheet ===================== */
