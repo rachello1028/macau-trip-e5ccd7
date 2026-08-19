@@ -490,7 +490,9 @@ let tickets  = store.get(LS.tk, {});          // {itemKey:{url,img,booked,pnr}}
 let prepaid  = store.get(LS.prepaid, []);     // {id,name,amt,cur} 行前已付（機酒等）
 let activeTab = 0;
 function curLabel(c){ return c==='TWD'?'NT$':'MOP'; }
+function toTWD(amt,cur){ return cur==='TWD'?amt:amt*MOP2TWD; }
 function prepaidTWD(){ return prepaid.reduce((s,p)=>s+(p.cur==='TWD'?p.amt:p.amt*MOP2TWD),0); }
+function ticketPaidTWD(){ return Object.values(tickets).reduce((s,t)=>s+(t&&t.paid>0?toTWD(t.paid,t.paidCur||'TWD'):0),0); }
 
 /* ===================== 地圖 ===================== */
 function mapURL(q){
@@ -713,6 +715,13 @@ function openTicket(key){
   // 已訂購 toggle
   html+='<button class="tog" id="tkBooked" aria-pressed="'+(!!saved.booked)+'"><span class="tk"></span>'
     +'<span class="tl">'+(saved.booked?'已訂購 ✓':'標記為已訂購')+'<small>'+(saved.booked?'點一下可取消':'訂好後點這裡打勾，總表會同步')+'</small></span></button>';
+  // 實付票價（記錄後算進帳本門票）
+  const paidCurDef=(bk&&bk.onsite)?'MOP':'TWD';
+  const pc=saved.paidCur||paidCurDef;
+  html+='<div class="field" style="margin-top:14px"><label>實付票價 · 幾張都可加總</label>'
+    +'<div class="amt-in"><select id="tkCur"><option value="MOP"'+(pc==='MOP'?' selected':'')+'>MOP 澳門幣</option><option value="TWD"'+(pc==='TWD'?' selected':'')+'>NT$ 台幣</option></select>'
+    +'<input id="tkPaid" type="number" inputmode="decimal" placeholder="0" value="'+(saved.paid||'')+'"></div>'
+    +'<div class="hint" style="margin-top:6px">'+(bk?'預估 '+bk.price+'，':'')+'填入實際付的總額（同項多張就填總和），會算進帳本「門票已購」與全部合計。</div></div>';
   // 前往訂購（該項專屬連結）
   if(bk && bk.link) html+='<a class="big-btn" href="'+bk.link+'" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none">前往 '+bk.plat.split(' ')[0]+' 訂購 →</a>';
   else if(bk && bk.onsite) html+='<div class="hint" style="margin-top:0">此項現場購票即可，不用先訂。</div>';
@@ -731,7 +740,12 @@ function openTicket(key){
   html+='<div class="hint">把票券連結或 QR 截圖存起來，到現場點「開票」一秒叫出，不用翻信箱找。資料只存在你自己手機。</div>';
   sheet.innerHTML=html; openSheet();
   document.getElementById('tkBooked').onclick=()=>{
-    tickets[key]=Object.assign(tickets[key]||{},{booked:!(tickets[key]&&tickets[key].booked)});
+    const pEl=document.getElementById('tkPaid'), cEl=document.getElementById('tkCur'), uEl=document.getElementById('tkUrl');
+    const cur=tickets[key]||{};
+    tickets[key]=Object.assign(cur,{booked:!cur.booked,
+      url:uEl?uEl.value.trim():cur.url,
+      paid:pEl?(parseFloat(pEl.value)||0):cur.paid,
+      paidCur:cEl?cEl.value:cur.paidCur});
     store.set(LS.tk,tickets); openTicket(key); TABS[activeTab].render(); refreshFoot();
     toast(tickets[key].booked?'已標記為已訂購 ✓':'已取消標記');
   };
@@ -743,8 +757,11 @@ function openTicket(key){
   };
   document.getElementById('tkSave').onclick=()=>{
     const url=document.getElementById('tkUrl').value.trim();
-    tickets[key]=Object.assign(tickets[key]||{},{url}); store.set(LS.tk,tickets);
-    closeSheet(); TABS[activeTab].render(); toast("電子票已儲存");
+    const paid=parseFloat(document.getElementById('tkPaid').value)||0;
+    const paidCur=document.getElementById('tkCur').value;
+    tickets[key]=Object.assign(tickets[key]||{},{url,paid,paidCur}); store.set(LS.tk,tickets);
+    closeSheet(); TABS[activeTab].render(); refreshFoot();
+    toast(paid>0?"已記錄實付 "+curLabel(paidCur)+" "+money(paid):"電子票已儲存");
   };
 }
 
@@ -785,10 +802,12 @@ function flightSheet(key,it,saved){
 function renderReminders(){
   const v=document.getElementById('view'); const now=nowMock();
   const bookedN = BOOKINGS.filter(b=>tickets[b.key]&&tickets[b.key].booked).length;
+  const paidTW = ticketPaidTWD();
   let html='<section class="day-hero"><div class="eyebrow">⏰ 關鍵時間</div>'
     +'<h2>訂票與班機提醒</h2><p>已把路程與報到緩衝算進去，倒數「最晚出發時間」。開著 App 時到點會跳提醒。</p>'
     +'<div class="day-meta"><button class="chip" id="notifBtn" style="cursor:pointer">🔔 開啟到點通知</button>'
-    +'<span class="chip spend">🎟️ 訂票 '+bookedN+'/'+BOOKINGS.length+'</span></div></section>';
+    +'<span class="chip spend">🎟️ 訂票 '+bookedN+'/'+BOOKINGS.length+'</span>'
+    +(paidTW>0?'<span class="chip spend">💳 已購票 NT$'+money(paidTW)+'</span>':'')+'</div></section>';
   REMINDERS.forEach(r=>{
     const ev=new Date(r.eventISO), lv=leaveTime(r);
     html+='<div class="rem '+r.kind+'"><div class="rem-top"><h3>'+r.title+'</h3>'
@@ -815,7 +834,8 @@ function renderReminders(){
         +(booked?' <span class="t done">已訂 ✓</span>':'')+'</div>'
       +'<div class="bsub">'+b.day+' · '+b.plat+'</div></div>'
       +'<div class="bright"><div class="bprice">'+b.price+'</div>'
-      +'<button class="blink" data-mng="'+b.key+'">'+(hasV?'開我的票 →':(booked?'管理票券':(b.onsite?'現場購票':'前往訂 →')))+'</button>'
+      +(tk.paid>0?'<div style="font-size:12.5px;font-weight:700;color:var(--green);font-variant-numeric:tabular-nums;margin-top:1px">實付 '+curLabel(tk.paidCur||'TWD')+' '+money(tk.paid)+'</div>':'')
+      +'<button class="blink" data-mng="'+b.key+'">'+(tk.paid>0?'改實付／票':(hasV?'開我的票 →':(booked?'記實付／票券':(b.onsite?'現場購票':'前往訂 →'))))+'</button>'
       +'</div></div>';
   });
   html+='<div class="callout" style="margin-top:6px">點左邊圓圈標記<b>已訂購</b>；點右邊可貼上你的電子票／QR。「必訂」熱門常客滿，務必<b>出發前 1–2 週</b>先訂。這裡標記會跟行程當天的景點電子票同步。</div>';
@@ -916,20 +936,21 @@ const PRE_LEN=PRETRIP.length, PACK_LEN=PACKING.length;
 /* ===================== 帳本 sheet ===================== */
 function openLedger(){
   const sheet=document.getElementById('sheet');
-  const tripMOP=totalMOP(), tripTWD=tripMOP*MOP2TWD, preTWD=prepaidTWD(), grandTWD=preTWD+tripTWD;
+  const tripMOP=totalMOP(), tripTWD=tripMOP*MOP2TWD, preTWD=prepaidTWD(), tkTWD=ticketPaidTWD(), grandTWD=preTWD+tripTWD+tkTWD;
   const byCat={}, byPay={};
   expenses.forEach(e=>{ byCat[e.cat]=(byCat[e.cat]||0)+toMOP(e.amt,e.cur); byPay[e.pay||"💵 現金"]=(byPay[e.pay||"💵 現金"]||0)+toMOP(e.amt,e.cur); });
   const cats=Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
 
   let html='<div class="grip"></div><h3>花費帳本</h3>'
-    +'<div class="sh-sub">機酒等行前已付 ＋ 旅途花費，台幣統計（1 MOP≈NT$'+MOP2TWD+'）</div>';
+    +'<div class="sh-sub">機酒行前已付 ＋ 門票已購 ＋ 旅途花費，台幣統計（1 MOP≈NT$'+MOP2TWD+'）</div>';
   // 合計
   html+='<div style="background:var(--ink);color:var(--bg);border-radius:16px;padding:15px 16px;margin-bottom:11px">'
-    +'<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;opacity:.65">全部合計（含機酒）</div>'
+    +'<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;opacity:.65">全部合計（含機酒＋門票）</div>'
     +'<div style="font-family:var(--serif);font-size:29px;font-weight:700">NT$'+money(grandTWD)+'</div></div>';
-  html+='<div style="display:flex;gap:10px;margin-bottom:18px">'
-    +'<div style="flex:1;background:var(--blue-soft);border-radius:13px;padding:12px 13px"><div style="font-size:10.5px;font-weight:700;color:var(--blue-ink);text-transform:uppercase;letter-spacing:.04em">行前已付</div><div style="font-family:var(--serif);font-size:20px;font-weight:700;color:var(--blue-ink)">NT$'+money(preTWD)+'</div></div>'
-    +'<div style="flex:1;background:var(--gold-soft);border-radius:13px;padding:12px 13px"><div style="font-size:10.5px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.04em">旅途花費</div><div style="font-family:var(--serif);font-size:20px;font-weight:700;color:var(--gold)">MOP '+money(tripMOP)+'</div><div style="font-size:11px;color:var(--muted);font-weight:600">≈ NT$'+money(tripTWD)+'</div></div></div>';
+  html+='<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px">'
+    +'<div style="flex:1;min-width:150px;background:var(--blue-soft);border-radius:13px;padding:12px 13px"><div style="font-size:10.5px;font-weight:700;color:var(--blue-ink);text-transform:uppercase;letter-spacing:.04em">行前已付</div><div style="font-family:var(--serif);font-size:20px;font-weight:700;color:var(--blue-ink)">NT$'+money(preTWD)+'</div></div>'
+    +'<div style="flex:1;min-width:150px;background:var(--green-soft);border-radius:13px;padding:12px 13px"><div style="font-size:10.5px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.04em">門票已購</div><div style="font-family:var(--serif);font-size:20px;font-weight:700;color:var(--green)">NT$'+money(tkTWD)+'</div></div>'
+    +'<div style="flex:1;min-width:150px;background:var(--gold-soft);border-radius:13px;padding:12px 13px"><div style="font-size:10.5px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.04em">旅途花費</div><div style="font-family:var(--serif);font-size:20px;font-weight:700;color:var(--gold)">MOP '+money(tripMOP)+'</div><div style="font-size:11px;color:var(--muted);font-weight:600">≈ NT$'+money(tripTWD)+'</div></div></div>';
 
   // 行前已付款
   html+='<div class="sec-label" style="margin-top:0">行前已付款（機票＋酒店等）</div>';
@@ -942,6 +963,21 @@ function openLedger(){
     });
   } else html+='<div style="font-size:13px;color:var(--muted);padding:8px 0">還沒記錄。把雄獅的機＋酒訂單金額加進來，總花費才完整。</div>';
   html+='<button class="add-free" id="addPre" style="margin-top:8px">＋ 新增行前已付款</button></div></div>';
+
+  // 門票明細 · 實付
+  html+='<div class="sec-label">門票明細 · 實付金額</div>';
+  html+='<div class="card"><div class="card-b" style="padding:6px 15px 14px">';
+  BOOKINGS.forEach(b=>{
+    const tk=tickets[b.key]||{}; const has=tk.paid>0;
+    html+='<div class="logged-row" style="padding:9px 0"><span style="min-width:0"><b style="font-weight:600">'+b.name+'</b>'
+      +'<small style="display:block;color:var(--faint);font-weight:400;font-size:11.5px">估 '+b.price+'</small></span>'
+      +(has?'<span class="amt" style="color:var(--green)">'+curLabel(tk.paidCur||'TWD')+' '+money(tk.paid)+'</span>'
+          :'<span class="amt" style="color:var(--faint);font-weight:600">未記</span>')
+      +'<button data-tkedit="'+b.key+'" style="color:var(--blue)">'+(has?'修改':'記錄')+'</button></div>';
+  });
+  html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0 3px;border-top:2px solid var(--border);margin-top:2px"><span style="font-weight:700">門票小計</span><span style="font-weight:700;color:var(--green);font-variant-numeric:tabular-nums">NT$'+money(tkTWD)+'</span></div>';
+  html+='<div class="hint" style="margin-top:8px">預訂的門票在這裡記實付；現場臨時消費才用行程頁的「記帳」，兩邊不會重複算。</div>';
+  html+='</div></div>';
 
   // 付款方式
   if(Object.keys(byPay).length){
@@ -970,6 +1006,7 @@ function openLedger(){
     prepaid=prepaid.filter(p=>p.id!==b.dataset.delpre); store.set(LS.prepaid,prepaid);
     openLedger(); refreshFoot(); toast("已刪除");
   });
+  document.querySelectorAll('[data-tkedit]').forEach(b=>b.onclick=()=>openTicket(b.dataset.tkedit));
 }
 function openPrepaid(){
   const sheet=document.getElementById('sheet');
@@ -998,6 +1035,7 @@ function openPrepaid(){
 function exportCSV(){
   let rows=[["日","時間","地點","分類","付款","幣別","金額","備註"]];
   prepaid.forEach(p=>rows.push(["行前","","（已付）"+p.name,"機酒/行前","",p.cur,p.amt,""]));
+  BOOKINGS.forEach(b=>{ const tk=tickets[b.key]||{}; if(tk.paid>0) rows.push(["門票","",b.name,"🎫 門票","",tk.paidCur||"TWD",tk.paid,"實付"]); });
   expenses.slice().sort((a,b)=>a.dayIdx-b.dayIdx||((a.itemIdx??99)-(b.itemIdx??99))).forEach(e=>{
     const it=(e.itemIdx!=null)?DAYS[e.dayIdx].items[e.itemIdx]:null;
     const t=it?it.t:""; const name=it?it.title:(e.place||"額外");
