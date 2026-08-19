@@ -835,10 +835,10 @@ function renderReminders(){
       +'<div class="bsub">'+b.day+' · '+b.plat+'</div></div>'
       +'<div class="bright"><div class="bprice">'+b.price+'</div>'
       +(tk.paid>0?'<div style="font-size:12.5px;font-weight:700;color:var(--green);font-variant-numeric:tabular-nums;margin-top:1px">實付 '+curLabel(tk.paidCur||'TWD')+' '+money(tk.paid)+'</div>':'')
-      +'<button class="blink" data-mng="'+b.key+'">'+(tk.paid>0?'改實付／票':(hasV?'開我的票 →':(booked?'記實付／票券':(b.onsite?'現場購票':'前往訂 →'))))+'</button>'
+      +'<button class="blink" data-mng="'+b.key+'">'+(tk.paid>0?'改實付／票 →':((booked||hasV)?'＋ 記實付 →':(b.onsite?'現場購票 →':'前往訂 →')))+'</button>'
       +'</div></div>';
   });
-  html+='<div class="callout" style="margin-top:6px">點左邊圓圈標記<b>已訂購</b>；點右邊可貼上你的電子票／QR。「必訂」熱門常客滿，務必<b>出發前 1–2 週</b>先訂。這裡標記會跟行程當天的景點電子票同步。</div>';
+  html+='<div class="callout" style="margin-top:6px">點左邊圓圈標記<b>已訂購</b>；點右邊「<b>＋ 記實付</b>」可填實際票價、貼電子票／QR。填了實付會算進帳本「門票已購」與全部合計。「必訂」熱門常客滿，務必<b>出發前 1–2 週</b>先訂。</div>';
   html+='</div></div>';
   v.innerHTML=html;
   document.getElementById('notifBtn').onclick=requestNotif;
