@@ -353,13 +353,13 @@ const DAYS = [
  { d:"Day 1", date:"08/27", dow:"四", theme:"抵達 ＋ 世遺老城",
    note:"景點較多，太累可挑幾個跳過，晚餐前保留彈性。標「打卡」的拍照即走。",
    items:[
-    {t:"03:30",ic:"🚗",title:"開車出發 → 桃園機場 第一航廈（T1）",note:"星宇航空在 T1，別開到 T2！建議停 T1 的 P1／P2 停車場，就在航廈出入口旁、走路約 2 分鐘到出境大廳。停 4 天約 NT$1,440（每日上限 NT$360）；想更省可停機場外民營停車場（約 NT$150／天、有免費接駁）。依住家車程抓時間。",type:"transport",map:"桃園國際機場第一航廈",parking:"桃園機場第一航廈停車場 P1 P2",est:1440,estcur:"TWD",estnote:"停車 4 天估"},
+    {t:"03:30",ic:"🚗",title:"開車出發 → 桃園機場 第一航廈（T1）",note:"星宇航空在 T1，別開到 T2！建議停 T1 的 P1／P2 停車場，就在航廈出入口旁、走路約 2 分鐘到出境大廳。停 4 天約 NT$1,440（每日上限 NT$360）；想更省可停機場外民營停車場（約 NT$150／天、有免費接駁）。依住家車程抓時間，今天建議再提早一點，留時間在 T1 領外幣＋報到。",type:"transport",map:"桃園國際機場第一航廈",parking:"桃園機場第一航廈停車場 P1 P2",est:1440,estcur:"TWD",estnote:"停車 4 天估"},
+    {t:"04:40",ic:"🏧",title:"台銀外幣 ATM 領港幣（出境大廳 11 號櫃檯旁）",note:"提早一點到，直接在 1 樓出境大廳、11 號報到櫃檯旁的台銀 ATM 領港幣 HKD（澳門與港幣約 1:1 通用）。萬一這台被領光，過完海關後 3 樓往登機門路上還有一台台銀 ATM 可當備案。一次領足全程現金，就不用到澳門再換匯。",type:"transport",map:"桃園國際機場第一航廈 出境大廳"},
     {t:"04:50",ic:"🛄",title:"第一航廈（T1）報到、辦理登機",note:"星宇航空（JX）在 T1 出境大廳報到、託運、安檢。今年暑假尖峰建議提前 3 小時抵達。",type:"transport",map:"桃園國際機場第一航廈 出境大廳"},
     {t:"07:50",ic:"✈️",title:"星宇航空 JX 起飛 TPE → MFM",note:"第一航廈（T1）登機。飛行約 1 小時 55 分，09:45 抵達澳門。",type:"flight",ticket:{name:"電子機票 · 去程 JX（TPE→MFM）",plat:"雄獅訂單／星宇 App",flight:true}},
     {t:"09:45",ic:"🛂",title:"抵達澳門機場，入境",note:"領行李、出關，保留「小白單」入境憑證，退房離境都要用，別丟。",type:"transport",map:"澳門國際機場"},
     {t:"09:55",ic:"💳",title:"機場櫃檯買「澳門通」交通卡",note:"MOP80（含 MOP50 儲值＋MOP30 卡費）。搭公車感應只要 MOP3 起，比投現金 MOP6 划算。",type:"transport",est:80,estcur:"MOP"},
-    {t:"10:00",ic:"🚕",title:"機場 → 酒店",note:"直接搭計程車最快，約 15 分鐘。免費穿梭巴士多 10–11 點後才發車，早到直接搭車。",type:"transport",map:"澳門勵庭海景酒店 Harbourview Hotel Macau",est:85,estcur:"MOP",estnote:"的士 MOP70–100"},
-    {t:"10:05",ic:"💱",title:"機場找換店 先換小額港幣",note:"換約 HKD500–1000 應急（付車資、小額）。匯率較差但方便，主力款留到下午新馬路換。",type:"transport"},
+    {t:"10:00",ic:"🚕",title:"機場 → 酒店",note:"直接搭計程車最快，約 15 分鐘。免費穿梭巴士多 10–11 點後才發車，早到直接搭車。車資用出發前領好的港幣付即可。",type:"transport",map:"澳門勵庭海景酒店 Harbourview Hotel Macau",est:85,estcur:"MOP",estnote:"的士 MOP70–100"},
     {t:"10:30",ic:"🧳",title:"抵達酒店，寄放行李",note:"Check-in 要 15:00 後，先寄放行李輕裝出門。",type:"hotel",map:"澳門勵庭海景酒店"},
     {t:"11:00",ic:"📸",title:"華倫天奴 澳門壹號廣場店",note:"酒店步行約 10 分鐘，南灣湖景精品商場，拍照即可離開。",type:"sight",tags:["ka"],map:"澳門壹號廣場 One Central Macau"},
     {t:"12:00",ic:"🍽️",title:"午餐：漁人碼頭周邊簡餐",note:"酒店步行 5 分鐘內；也可選余榮記咖啡葡撻餐（南灣店）。",type:"eat",est:320,estcur:"TWD",map:"澳門漁人碼頭"},
@@ -367,7 +367,6 @@ const DAYS = [
     {t:"14:00",ic:"⛪",title:"議事亭前地 → 市政署 → 大三巴牌坊 → 玫瑰堂",note:"景點彼此 5–10 分鐘步行圈內。市政署（Jojo 打卡）就在廣場旁，順路拍照。",type:"sight",tags:["ka","free"],map:"大三巴牌坊 Ruins of St. Paul's"},
     {t:"15:00",ic:"📸",title:"十月初五馬路 → 南屏雅敘",note:"步行約 8 分鐘，內港老街風情。南屏雅敘是百年老茶室建築，拍照即可。",type:"sight",tags:["ka"],map:"南屏雅敘 澳門"},
     {t:"15:20",ic:"🏛️",title:"典當業展示館（德成按）",note:"步行約 5 分鐘回新馬路一帶，澳門唯一當舖博物館，拍照即可。",type:"sight",tags:["ka"],map:"典當業展示館 德成按"},
-    {t:"15:35",ic:"💱",title:"新馬路找換店 換匯主力款",note:"興業／大眾兌換等民間找換店匯率比機場好，這裡把主要現金換好。",type:"transport",map:"新馬路 澳門"},
     {t:"15:40",ic:"🍮",title:"打鐵豆花",note:"步行可達，豆花小憩。",type:"eat",est:40,estcur:"TWD",map:"打鐵豆花 澳門"},
     {t:"16:00",ic:"🍢",title:"恆友魚蛋滷味 → 檸檬車露冰淇淋",note:"板樟堂街，部落客熱推排隊小吃＋人氣甜點。",type:"eat",tags:["ka"],est:180,estcur:"TWD",map:"恆友魚蛋 板樟堂街"},
     {t:"16:40",ic:"📚",title:"葡文書局",note:"大三巴周邊，文青書店拍照打卡。",type:"sight",tags:["ka"],map:"葡文書局 Livraria Portuguesa 澳門"},
@@ -452,7 +451,7 @@ const PRETRIP = [
  {t:"水舞間門票 先線上訂",s:"出發前 1–2 週，Klook／KKday 選位"},
  {t:"旅遊塔 360 餐廳 先訂位",s:"出發前 1–2 週，官網／電話"},
  {t:"貢多拉、巴黎鐵塔、旅遊塔觀光層 先訂",s:"Klook 約 8–9 折，省現場排隊"},
- {t:"台銀先換少量 HKD 應急",s:"桃園機場先換，付車資用"},
+ {t:"出發當天在 T1 台銀 ATM 領港幣",s:"1F 出境大廳 11 號櫃檯旁；備案 3F 往登機門那台，一次領足全程現金"},
  {t:"確認 03:30 到機場的交通",s:"捷運客運未發車，先約好計程車／接送"},
 ];
 const PACKING = [
@@ -892,14 +891,15 @@ function renderGuide(){
     +'<div class="card-b"><table class="mini">'
     +TIPS.map(r=>'<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>').join('')+'</table></div></div>';
 
-  // 換匯
-  html+='<div class="card"><div class="card-h"><span class="ic">💱</span><div><h3>去哪換匯</h3>'
-    +'<div class="sub">主用 MOP 澳門幣／HKD 港幣通用（約 1:1）</div></div></div>'
+  // 現金／換匯
+  html+='<div class="card"><div class="card-h"><span class="ic">🏧</span><div><h3>現金怎麼準備</h3>'
+    +'<div class="sub">出發當天在桃園 T1 台銀 ATM 領好港幣，澳門直接用</div></div></div>'
     +'<div class="card-b kv">'
-    +'<div>✓ <b>推薦</b>：澳門「新馬路」一帶民間找換店，匯率較佳</div>'
-    +'<div>✓ 桃園機場先換少量 HKD 應急（付車資）</div>'
-    +'<div>✗ <b>避免</b>：澳門機場內找換店，匯率最差</div>'
-    +'<div>✗ 不建議用人民幣支付，會有匯損</div>'
+    +'<div>✓ <b>主領</b>：T1 <b>1 樓出境大廳、11 號報到櫃檯旁</b>的台銀外幣 ATM，領港幣 HKD。</div>'
+    +'<div>✓ <b>備案</b>：若被領光，<b>過完海關後 3 樓往登機門路上</b>還有一台台銀 ATM。</div>'
+    +'<div>✓ 港幣 HKD 與澳門幣 MOP 約 <b>1:1</b>，在澳門直接通用，<b>不必到當地再換匯</b>。</div>'
+    +'<div>✓ 一次領足全程現金（車資、小吃、小費、澳門通），省時省匯損。</div>'
+    +'<div>✗ 不建議用人民幣支付，會有匯損。</div>'
     +'<div class="callout">大額消費：飯店／商場／賭場可直接刷卡或支付寶。</div>'
     +'</div></div>';
 
