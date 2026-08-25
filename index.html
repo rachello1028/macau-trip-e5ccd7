@@ -750,14 +750,33 @@ function tkGalleryHTML(imgs){
   let h='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">';
   imgs.forEach((src,i)=>{
     h+='<div style="position:relative;width:calc(50% - 4px)">'
-      +'<img src="'+src+'" alt="電子票 '+(i+1)+'" style="width:100%;border-radius:12px;border:1px solid var(--border);display:block">'
+      +'<img data-viewimg="'+i+'" src="'+src+'" alt="電子票 '+(i+1)+'（點可放大）" style="width:100%;height:120px;object-fit:cover;border-radius:12px;border:1px solid var(--border);display:block;cursor:zoom-in">'
       +'<button data-delimg="'+i+'" aria-label="刪除這張" style="position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;background:rgba(20,26,34,.72);color:#fff;font-size:16px;font-weight:700;display:grid;place-items:center;line-height:1">×</button>'
-      +'<div style="position:absolute;left:6px;bottom:6px;background:rgba(20,26,34,.72);color:#fff;font-size:11px;font-weight:700;padding:1px 7px;border-radius:6px">'+(i+1)+'</div></div>';
+      +'<div style="position:absolute;left:6px;bottom:6px;background:rgba(20,26,34,.72);color:#fff;font-size:11px;font-weight:700;padding:1px 7px;border-radius:6px">'+(i+1)+'</div>'
+      +'<div style="position:absolute;right:6px;bottom:6px;background:rgba(20,26,34,.72);color:#fff;font-size:12px;padding:2px 6px;border-radius:6px;pointer-events:none">🔍</div></div>';
   });
   return h+'</div>';
 }
+function openImgViewer(imgs,idx){
+  const list=Array.isArray(imgs)?imgs:[imgs]; let cur=idx||0;
+  let ov=document.getElementById('imgViewer');
+  if(!ov){
+    ov=document.createElement('div'); ov.id='imgViewer';
+    ov.style.cssText='position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.93);display:none;flex-direction:column;align-items:center;justify-content:center;padding:16px;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)';
+    ov.innerHTML='<img id="imgViewerImg" alt="票券放大" style="max-width:100%;max-height:82vh;object-fit:contain;border-radius:10px;box-shadow:0 12px 48px rgba(0,0,0,.6)">'
+      +'<div id="imgViewerCap" style="color:rgba(255,255,255,.75);font-size:13px;margin-top:14px;font-weight:600"></div>';
+    ov.onclick=()=>{ ov.style.display='none'; };
+    document.body.appendChild(ov);
+  }
+  const render=()=>{ document.getElementById('imgViewerImg').src=list[cur];
+    const prefix = list.length>1 ? ('第 '+(cur+1)+' / '+list.length+' 張 · ') : '';
+    document.getElementById('imgViewerCap').textContent = prefix + '點任一處關閉'; };
+  render(); ov.style.display='flex';
+}
 function bindDelImg(key){
-  document.querySelectorAll('[data-delimg]').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#sheet [data-viewimg]').forEach(im=>im.onclick=()=>openImgViewer(tkImgs(tickets[key]),+im.dataset.viewimg));
+  document.querySelectorAll('#sheet [data-delimg]').forEach(b=>b.onclick=e=>{
+    e.stopPropagation();
     const arr=tkImgs(tickets[key]); arr.splice(+b.dataset.delimg,1); setTkImgs(key,arr);
     openTicket(key); TABS[activeTab].render(); toast("已移除一張");
   });
