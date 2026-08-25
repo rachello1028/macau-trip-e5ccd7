@@ -611,7 +611,7 @@ function renderDay(idx){
     if(it.parking) html+='<a class="act" href="'+mapURL(it.parking)+'" target="_blank" rel="noopener"><b style="font-size:14px">🅿</b> 停車場</a>';
     html+='<button class="act money'+(logged>0?' has':'')+'" data-money="'+key+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>'+(logged>0?'MOP '+money(logged):'記帳')+'</button>';
     if(it.ticket){
-      const tkS = tickets[key]||{}; const hasTk = tkS.url||tkS.img; const isFlight=!!it.ticket.flight;
+      const tkS = tickets[key]||{}; const hasTk = tkS.url||tkImgs(tkS).length; const isFlight=!!it.ticket.flight;
       const done = isFlight ? (hasTk||tkS.pnr) : (!!tkS.booked);
       const tkLabel = isFlight ? (hasTk?'開機票':(tkS.pnr?'機票 ✓':'電子機票')) : (hasTk?'開票':(tkS.booked?'已訂 ✓':'電子票'));
       html+='<button class="act ticket'+(done?' booked':'')+'" data-ticket="'+key+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9V7a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 000 6v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2a2 2 0 000-6z"/><path d="M14 5v14" stroke-dasharray="2 2"/></svg>'+tkLabel+'</button>';
@@ -725,6 +725,44 @@ function expenseSheet(o){
   setTimeout(()=>{const el=document.getElementById(o.showPlace&&!ed?'placeIn':'amtIn'); if(el)el.focus();},300);
 }
 
+/* ===================== 電子票 · 多圖工具 ===================== */
+function tkImgs(t){ if(!t) return []; if(Array.isArray(t.imgs)) return t.imgs.slice(); if(t.img) return [t.img]; return []; }
+function setTkImgs(key,arr){
+  const t=tickets[key]||{}; const prevImgs=t.imgs, prevImg=t.img;
+  t.imgs=arr; delete t.img; tickets[key]=t;
+  try{ localStorage.setItem(LS.tk, JSON.stringify(tickets)); return true; }
+  catch(e){ t.imgs=prevImgs; if(prevImg!==undefined)t.img=prevImg; toast("儲存空間不足，圖片太大存不下"); return false; }
+}
+function addTkImages(key,fileList,cb){
+  const files=[...fileList].filter(f=>f&&f.type&&f.type.startsWith('image/'));
+  if(!files.length){ cb&&cb(0); return; }
+  const arr=tkImgs(tickets[key]); let done=0, ok=0;
+  files.forEach(f=>{
+    const rd=new FileReader();
+    const step=()=>{ done++; if(done===files.length){ const okSave=setTkImgs(key,arr); cb&&cb(okSave?ok:-1); } };
+    rd.onload=()=>{ arr.push(rd.result); ok++; step(); };
+    rd.onerror=step;
+    rd.readAsDataURL(f);
+  });
+}
+function tkGalleryHTML(imgs){
+  if(!imgs.length) return '';
+  let h='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">';
+  imgs.forEach((src,i)=>{
+    h+='<div style="position:relative;width:calc(50% - 4px)">'
+      +'<img src="'+src+'" alt="電子票 '+(i+1)+'" style="width:100%;border-radius:12px;border:1px solid var(--border);display:block">'
+      +'<button data-delimg="'+i+'" aria-label="刪除這張" style="position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;background:rgba(20,26,34,.72);color:#fff;font-size:16px;font-weight:700;display:grid;place-items:center;line-height:1">×</button>'
+      +'<div style="position:absolute;left:6px;bottom:6px;background:rgba(20,26,34,.72);color:#fff;font-size:11px;font-weight:700;padding:1px 7px;border-radius:6px">'+(i+1)+'</div></div>';
+  });
+  return h+'</div>';
+}
+function bindDelImg(key){
+  document.querySelectorAll('[data-delimg]').forEach(b=>b.onclick=()=>{
+    const arr=tkImgs(tickets[key]); arr.splice(+b.dataset.delimg,1); setTkImgs(key,arr);
+    openTicket(key); TABS[activeTab].render(); toast("已移除一張");
+  });
+}
+
 /* ===================== 電子票 sheet ===================== */
 function openTicket(key){
   const [di,ii]=key.split('-').map(Number);
@@ -753,15 +791,17 @@ function openTicket(key){
     +'<a href="https://www.klook.com/" target="_blank" rel="noopener">Klook</a>'
     +'<a href="https://www.kkday.com/" target="_blank" rel="noopener">KKday</a>'
     +'<a href="https://tw.trip.com/" target="_blank" rel="noopener">Trip.com</a></div>';
-  if(saved.img) html+='<img class="qr-preview" src="'+saved.img+'" alt="電子票 QR">';
+  const imgs=tkImgs(saved);
+  if(imgs.length) html+='<label style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;display:block;margin-top:16px">我的票券／QR（'+imgs.length+' 張）</label>'+tkGalleryHTML(imgs);
   if(saved.url) html+='<a class="big-btn" href="'+saved.url+'" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;margin-top:10px">開啟我的電子票 →</a>';
   html+='<div class="field" style="margin-top:16px"><label>貼上電子票／憑證連結</label>'
     +'<input class="txt-in" id="tkUrl" placeholder="https://…（貼上 Klook 憑證連結）" value="'+(saved.url||'')+'"></div>';
-  html+='<button class="big-btn ghost" id="tkPhoto">📷 存入 QR Code 截圖</button>'
-    +'<input type="file" id="tkFile" accept="image/*" style="display:none">';
+  html+='<button class="big-btn ghost" id="tkPhoto">📷 '+(imgs.length?'再加一張票券／QR':'存入票券／QR 截圖')+'（可多張）</button>'
+    +'<input type="file" id="tkFile" accept="image/*" multiple style="display:none">';
   html+='<button class="big-btn" id="tkSave">儲存到這個點</button>';
-  html+='<div class="hint">把票券連結或 QR 截圖存起來，到現場點「開票」一秒叫出，不用翻信箱找。資料只存在你自己手機。</div>';
+  html+='<div class="hint">多人同行可一次存多張票券／QR，每張右上角 × 可單獨刪。到現場點「開票」一秒叫出，不用翻信箱。資料只存在你自己手機。</div>';
   sheet.innerHTML=html; openSheet();
+  bindDelImg(key);
   document.getElementById('tkBooked').onclick=()=>{
     const pEl=document.getElementById('tkPaid'), cEl=document.getElementById('tkCur'), uEl=document.getElementById('tkUrl');
     const cur=tickets[key]||{};
@@ -774,9 +814,7 @@ function openTicket(key){
   };
   document.getElementById('tkPhoto').onclick=()=>document.getElementById('tkFile').click();
   document.getElementById('tkFile').onchange=e=>{
-    const f=e.target.files[0]; if(!f)return;
-    const rd=new FileReader(); rd.onload=()=>{ tickets[key]=Object.assign(tickets[key]||{},{img:rd.result}); store.set(LS.tk,tickets); openTicket(key); toast("已存入 QR 截圖"); };
-    rd.readAsDataURL(f);
+    addTkImages(key,e.target.files,n=>{ openTicket(key); TABS[activeTab].render(); if(n>0) toast(n>1?('已存入 '+n+' 張'):'已存入 1 張票券'); });
   };
   document.getElementById('tkSave').onclick=()=>{
     const url=document.getElementById('tkUrl').value.trim();
@@ -800,20 +838,20 @@ function flightSheet(key,it,saved){
     +'<a href="https://www.starlux-airlines.com/zh-TW/check-in-fly/check-in" target="_blank" rel="noopener">星宇報到</a>'
     +'<a href="https://www.starlux-airlines.com/zh-TW" target="_blank" rel="noopener">星宇官網</a>'
     +'<a href="https://www.liontravel.com/" target="_blank" rel="noopener">雄獅訂單</a></div>';
-  if(saved.img) html+='<img class="qr-preview" src="'+saved.img+'" alt="電子機票 / 登機證 QR">';
+  const fimgs=tkImgs(saved);
+  if(fimgs.length) html+='<label style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;display:block;margin-top:16px">我的登機證／QR（'+fimgs.length+' 張）</label>'+tkGalleryHTML(fimgs);
   if(saved.url) html+='<a class="big-btn" href="'+saved.url+'" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;margin-top:10px">開啟我的電子機票 →</a>';
   html+='<div class="field" style="margin-top:16px"><label>貼上電子機票／登機證連結</label>'
     +'<input class="txt-in" id="flUrl" placeholder="https://…（登機證或訂單連結）" value="'+(saved.url||'')+'"></div>';
-  html+='<button class="big-btn ghost" id="flPhoto">📷 存入登機證／QR 截圖</button>'
-    +'<input type="file" id="flFile" accept="image/*" style="display:none">';
+  html+='<button class="big-btn ghost" id="flPhoto">📷 '+(fimgs.length?'再加一張登機證／QR':'存入登機證／QR 截圖')+'（可多張、多人）</button>'
+    +'<input type="file" id="flFile" accept="image/*" multiple style="display:none">';
   html+='<button class="big-btn" id="flSave">儲存機票資訊</button>';
-  html+='<div class="hint">建議把登機證存成 QR 截圖，過安檢、登機離線也能秀。資料只存在你手機。機＋酒總費用可到「帳本 → 行前已付款」記錄。</div>';
+  html+='<div class="hint">同行每人的登機證可一次存多張，每張右上角 × 可單獨刪。過安檢、登機離線也能秀。資料只存在你手機。機＋酒總費用可到「帳本 → 行前已付款」記錄。</div>';
   sheet.innerHTML=html; openSheet();
+  bindDelImg(key);
   document.getElementById('flPhoto').onclick=()=>document.getElementById('flFile').click();
   document.getElementById('flFile').onchange=e=>{
-    const f=e.target.files[0]; if(!f)return;
-    const rd=new FileReader(); rd.onload=()=>{ tickets[key]=Object.assign(tickets[key]||{},{img:rd.result}); store.set(LS.tk,tickets); openTicket(key); toast("已存入截圖"); };
-    rd.readAsDataURL(f);
+    addTkImages(key,e.target.files,n=>{ openTicket(key); TABS[activeTab].render(); if(n>0) toast(n>1?('已存入 '+n+' 張'):'已存入 1 張'); });
   };
   document.getElementById('flSave').onclick=()=>{
     tickets[key]=Object.assign(tickets[key]||{},{pnr:document.getElementById('flPnr').value.trim().toUpperCase(),url:document.getElementById('flUrl').value.trim()});
@@ -849,7 +887,7 @@ function renderReminders(){
   html+='<div class="sec-label">需要購票／訂位總表 · 已完成 '+bookedN+'/'+BOOKINGS.length+'</div>';
   html+='<div class="card"><div class="card-b" style="padding-top:6px">';
   BOOKINGS.forEach(b=>{
-    const tk=tickets[b.key]||{}; const booked=!!tk.booked; const hasV=!!(tk.url||tk.img);
+    const tk=tickets[b.key]||{}; const booked=!!tk.booked; const hasV=!!(tk.url||tkImgs(tk).length);
     html+='<div class="brow'+(booked?' done':'')+'">'
       +'<button class="bchk" data-book="'+b.key+'" aria-pressed="'+booked+'" aria-label="標記已訂購／取消"></button>'
       +'<div class="binfo"><div class="bname">'+b.name
