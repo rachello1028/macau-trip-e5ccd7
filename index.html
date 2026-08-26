@@ -329,7 +329,7 @@ button:focus-visible,input:focus-visible,.tab:focus-visible{outline:2.5px solid 
       <div class="fsub" id="footTodayTwd">≈ NT$0</div>
     </div>
     <div class="foot-col">
-      <div class="fl">全程累計</div>
+      <div class="fl">全程總計 · 含機酒門票</div>
       <div class="fv"><span id="footTotal">0</span><small>MOP</small></div>
       <div class="fsub" id="footTotalTwd">≈ NT$0</div>
     </div>
@@ -510,11 +510,14 @@ function totalMOP(){ return expenses.reduce((s,e)=>s+toMOP(e.amt,e.cur),0); }
 function itemExp(di,ii){ return expenses.filter(e=>e.dayIdx===di&&e.itemIdx===ii); }
 
 function refreshFoot(){
-  const dt=dayMOP(activeTab), tt=totalMOP();
+  const dt=dayMOP(activeTab);
+  // 全程累計 = 帳本全部合計（行前機酒 ＋ 門票已購 ＋ 旅途現場），以 NT$ 為準再回推 MOP
+  const grandTWD = totalMOP()*MOP2TWD + prepaidTWD() + ticketPaidTWD();
+  const grandMOP = grandTWD/MOP2TWD;
   document.getElementById('footToday').textContent = money(dt);
-  document.getElementById('footTotal').textContent = money(tt);
+  document.getElementById('footTotal').textContent = money(grandMOP);
   document.getElementById('footTodayTwd').textContent = "≈ NT$"+money(dt*MOP2TWD);
-  document.getElementById('footTotalTwd').textContent = "≈ NT$"+money(tt*MOP2TWD);
+  document.getElementById('footTotalTwd').textContent = "≈ NT$"+money(grandTWD);
   const lbl = document.getElementById('footLabel');
   lbl.textContent = (DAYS[activeTab]?DAYS[activeTab].d:"旅途")+" 花費";
 }
